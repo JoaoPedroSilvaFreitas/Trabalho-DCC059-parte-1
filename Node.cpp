@@ -36,18 +36,14 @@ Node::~Node()
 };
 
 // Getters
-Edge* Node::getFirstEdge(){
-
-
+Edge* Node::getFirstEdge()
+{
     return this->first_edge;
-
 }
 
 Edge* Node::getLastEdge()
 {
-
     return this->last_edge;
-
 }
 
 int Node::getId()
@@ -91,7 +87,7 @@ void Node::setWeight(float weight)
     this->weight = weight;
 }
 
-// Other methods
+//insere aresta
 void Node::insertEdge(int target_id, float weight)
 {
     if(this->first_edge != nullptr)
@@ -104,7 +100,6 @@ void Node::insertEdge(int target_id, float weight)
     }
     else
     {
-         // Allocating the new edge and keeping the integrity of the edge list
         this->first_edge = new Edge(target_id);
         this->first_edge->setWeight(weight);
         this->last_edge = this->first_edge;
@@ -113,6 +108,7 @@ void Node::insertEdge(int target_id, float weight)
     this->number_edges++;
 }
 
+//remove todas arestas
 void Node::removeAllEdges()
 {
     if(this->first_edge != nullptr){
@@ -131,6 +127,7 @@ void Node::removeAllEdges()
     this->first_edge = this->last_edge = nullptr;
 }
 
+//Procura uma aresta pelo id
 bool Node::searchEdge(int target_id)
 {
     if(this->first_edge != nullptr)
@@ -145,6 +142,7 @@ bool Node::searchEdge(int target_id)
 
 }
 
+//Incrementa e decremente grau de um nó
 void Node::incrementInDegree()
 {
     this->in_degree++;
@@ -165,6 +163,7 @@ void Node::decrementOutDegree()
     this->out_degree--;
 }
 
+//Procura aresta entre
 Edge* Node::hasEdgeBetween(int target_id)
 {
     for(Edge *auxEdge = this->first_edge; auxEdge != nullptr; auxEdge = auxEdge->getNextEdge())
@@ -175,6 +174,7 @@ Edge* Node::hasEdgeBetween(int target_id)
     return nullptr;
 }
 
+//imprime arestas
 void Node::Print_Edges()
 {
     for(Edge* edge = first_edge; edge != nullptr; edge = edge->getNextEdge())

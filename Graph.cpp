@@ -25,7 +25,6 @@ Graph::~Graph()
 
     while (next_node != nullptr)
     {
-
         next_node->removeAllEdges();
         Node *aux_node = next_node->getNextNode();
         delete next_node;
