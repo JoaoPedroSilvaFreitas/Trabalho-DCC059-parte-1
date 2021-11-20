@@ -30,6 +30,7 @@ class Node
         // Other methods
         bool searchEdge(int target_id);
         void insertEdge(int target_id, float weight);
+        void removeAllEdges();
         void incrementOutDegree();
         void decrementOutDegree();
         void incrementInDegree();
