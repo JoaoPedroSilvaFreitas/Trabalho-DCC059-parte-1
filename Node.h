@@ -1,31 +1,60 @@
-#ifndef NODE_H
-#define NODE_H
+/**************************************************************************************************
+ * Implementation of the TAD Node
+**************************************************************************************************/
 
-#include "Edge.h"
-class Node
-{
-    public:
-    Node(int id, float value);
-    ~Node();
-    void printEdges();
+#ifndef NODE_H_INCLUDED
+#define NODE_H_INCLUDED
+#include "Edge.h" // Include of the Edge class
 
-    //Get
-    Node* getNext();
-    int getID();
-    float getVALUE();
-    void getEdges();
+using namespace std;
 
-    //Set
-    void setNextNode(Node *node);
-    void setEdge(int id_target);
-    
+// Definition of the Node class
+class Node{
 
+    // Attributes
     private:
-    int id;
-    float value;
-    Node* Next_Node;
-    Edge* First_Edge;
-    Edge* Last_Edge;
+        Edge* first_edge;
+        Edge* last_edge;
+        int id;
+        unsigned int in_degree;
+        unsigned int out_degree;
+        float weight;
+        Node* next_node;
+
+        int number_edges;
+
+    public:
+        // Constructor
+        Node(int id);
+        // Destructor
+        ~Node();
+        // Getters
+        Edge* getFirstEdge();
+        Edge* getLastEdge();
+        int getId();
+        int getInDegree();
+        int getOutDegree();
+        float getWeight();
+        Node* getNextNode();
+        // Setters
+        void setNextNode(Node* node);
+        void setWeight(float weight);
+        // Other methods
+        bool searchEdge(int target_id);
+        void insertEdge(int target_id, float weight);
+        void removeAllEdges();
+        int removeEdge(int id, bool directed, Node* target_node);
+        void incrementOutDegree();
+        void decrementOutDegree();
+        void incrementInDegree();
+        void decrementInDegree();
+        Edge* hasEdgeBetween(int target_id);
+
+        //Minhas funções
+        void Print_Edges();
+        int getNumberEdges();
+        // Auxiliar methods
+
 };
 
-#endif
+#endif // NODE_H_INCLUDED
