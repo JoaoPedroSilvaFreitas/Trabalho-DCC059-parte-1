@@ -3,27 +3,27 @@
 
 using namespace std;
 
-// Definition of the Edge class
-class Edge{
-
-    // Attributes
-    private:
-        int target_id;
-        Edge* next_edge;
-        float weight;
-
+class Edge
+{
     public:
-        // Constructor
+        // Constructor & Destructor
         Edge(int target_id);
-        // Destructor
         ~Edge();
+
         // Getters
         int getTargetId();
         Edge* getNextEdge();
         float getWeight();
+
+
         // Setters
         void setNextEdge(Edge* edge);
         void setWeight(float weight); 
+
+    private:
+        int target_id;
+        Edge* next_edge;
+        float weight;
 
 }; 
 
