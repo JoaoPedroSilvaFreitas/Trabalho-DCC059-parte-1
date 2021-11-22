@@ -15,7 +15,13 @@ Graph::Graph(int order, bool directed, bool weighted_edge, bool weighted_node)
     this->weighted_edge = weighted_edge;
     this->weighted_node = weighted_node;
     this->first_node = this->last_node = nullptr;
-    this->number_edges = number_edges;
+    this->number_edges = 0;
+
+    //Função para inserir nós
+    for(int i = 0; i < order; i++)
+    {
+        insertNode(i);
+    }
 }
 
 Graph::~Graph()
@@ -83,6 +89,8 @@ void Graph::insertNode(int id)
     insert_aux++;
     if(insert_aux == 1) first_node = node;
 
+    //PRECISO ALTERAR ISSO AQUI PORQUE O PESO É FORNECIDO PELO ARQUIVO .DOT
+    /*
     if(getWeightedNode())
     {
         float NodeWeight;
@@ -94,6 +102,7 @@ void Graph::insertNode(int id)
     {
         node->setWeight(1);
     }
+    */
 }
 
 //insere arestas
