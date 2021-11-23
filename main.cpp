@@ -6,6 +6,7 @@
 #include "Node.h"
 using namespace std;
 
+
 /*ESSA FUNÇÂO PROVAVELMENTE SERÁ REMOVIDA
 
 Graph* Cria_Grafo(Graph* grafo, int order, bool directed, bool weighted_edge, bool weighted_node)
@@ -49,6 +50,7 @@ Graph* Cria_Grafo(Graph* grafo, int order, bool directed, bool weighted_edge, bo
 }
 
 */
+
 
 Graph* Cria_Grafo(ifstream& input_file, int directed, int weightedEdge, int weightedNode)
 {
@@ -144,6 +146,86 @@ Graph* ler_Arquivo(ifstream& input_file, int directed, int weightedEdge, int wei
 */
 
 
+char MainMenu(Graph* grafo)
+{
+    char opt = 'd';
+    cout << "----------------Main Menu-----------------" << endl;
+    cout << "1- Subgrafo induzido por conjunto de vertices" << endl;
+    cout << "2- Caminho Minimo entre dois vertices - Dijkstra" << endl;
+    cout << "3- Caminho Minimo entre dois vertices - Floyd" << endl;
+    cout << "4- Arvore Geradora Minima de Prim" << endl;
+    cout << "5- Arvore Geradora Minima de Kruskal" << endl;
+    cout << "6- Imprimir caminhamento em largura" << endl;
+    cout << "7- Imprimir ordenacao topologica" << endl;
+    cout << "8- Algoritmo Guloso" << endl;
+    cout << "9- Algoritmo Guloso Randomizado " << endl;
+    cout << "A- Algoritmo Guloso Randomizado Reativo" << endl;
+    cout << "B- Imprime lista de adjacencia" << endl;
+    cout << "0- Sair" << endl;
+    cout << "------------------------------------------" << endl;
+    cin >> opt;
+    return opt;
+}
+
+
+void AuxMainMenu(Graph* grafo)
+{
+    char opt = 'z';
+        while(opt != '0')
+        {
+            opt = MainMenu(grafo);
+            if(opt == '1')
+            {
+
+            }
+            if(opt == '2')
+            {
+                
+            }
+            if(opt == '3')
+            {
+                
+            }
+            if(opt == '4')
+            {
+                
+            }
+            if(opt == '5')
+            {
+                
+            }
+            if(opt == '6')
+            {
+                
+            }
+            if(opt == '7')
+            {
+                
+            }
+            if(opt == '8')
+            {
+                
+            }
+            if(opt == '9')
+            {
+                
+            }
+            if(opt == 'a')
+            {
+                
+            }
+            if(opt == 'b')
+            {
+                grafo->Print_Ad_list();
+            }
+            else if(opt == '0')
+            {
+                return;
+            }
+        }
+}
+
+
 int main(int argc, const char*argv[])
 {
     //Verifica se foram passados todos parametros
@@ -180,6 +262,7 @@ int main(int argc, const char*argv[])
     } 
 
     //ADICIONAR MENU AQUI
+    AuxMainMenu(grafo);
 
    //Fechando arquivos de entrada e saída
     input_file.close();

@@ -26,7 +26,6 @@ Graph::Graph(int order, bool directed, bool weighted_edge, bool weighted_node)
 
 Graph::~Graph()
 {
-
     Node *next_node = this->first_node;
 
     while (next_node != nullptr)
@@ -61,19 +60,16 @@ Node *Graph::getLastNode()
 
 bool Graph::getDirected()
 {
-
     return this->directed;
 }
 
 bool Graph::getWeightedEdge()
 {
-
     return this->weighted_edge;
 }
 
 bool Graph::getWeightedNode()
 {
-
     return this->weighted_node;
 }
 
@@ -88,29 +84,30 @@ void Graph::insertNode(int id)
 
     insert_aux++;
     if(insert_aux == 1) first_node = node;
-
-    //PRECISO ALTERAR ISSO AQUI PORQUE O PESO É FORNECIDO PELO ARQUIVO .DOT
-    /*
-    if(getWeightedNode())
-    {
-        float NodeWeight;
-        cout << "Node [" << node->getId() << "] weight:";
-        cin >> NodeWeight;
-        node->setWeight(NodeWeight);
-    }
-    else
-    {
-        node->setWeight(1);
-    }
-    */
 }
 
 //insere arestas
 void Graph::insertEdge(int id, int target_id, float weight)
 {
-    Node* node = getNode(id);
-    node->insertEdge(target_id,weight);
-    this->number_edges++;
+    //Caso o grafo seja direcionado
+    if(getDirected())
+    {
+        Node* node = getNode(id);
+        Node* node_target = getNode(target_id);
+        node->insertEdge(target_id,weight);
+        node->incrementOutDegree();
+        node_target->incrementInDegree();
+        this->number_edges++;
+    }
+    else
+    {
+        //Caso o grafo nao seja direcionado
+        Node* node = getNode(id);
+        Node* node_target = getNode(target_id);
+        node->insertEdge(target_id,weight);
+        node_target->insertEdge(id,weight);
+        this->number_edges++;
+    }
 }
 
 //procura um nó pelo id
@@ -182,7 +179,7 @@ Graph* agmPrim()
 
 }
 
-//Minhas funções de teste
+//Imprime a lista de adjacencia
 void Graph::Print_Ad_list()
 {
     for(Node* aux = first_node; aux != nullptr; aux = aux->getNextNode())
