@@ -10,7 +10,7 @@ using namespace std;
 class Graph
 {
     public:
-        // Constructor & Destructor
+        // Construtor & Destrutor
         Graph(int order, bool directed, bool weighted_edge, bool weighted_node);
         ~Graph();
 

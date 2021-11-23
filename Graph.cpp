@@ -37,6 +37,7 @@ Graph::~Graph()
     }
 }
 
+
 // Getters
 int Graph::getOrder()
 {
@@ -138,25 +139,41 @@ Node *Graph::getNode(int id)
     return node;
 }
 
-//Funções parte 1
-void Graph::breadthFirstSearch(ofstream &output_file)
+//FUNÇÕES PARTE 1
+
+//Subgrafo induzido por subconjunto de vertices (1)
+Graph* Graph::getVertexInduced(int* listIdNodes)
 {
-    
+
 }
 
-float Graph::floydMarshall(int idSource, int idTarget)
-{
-    
-}
-
+//Caminho Minimo entre dois vertices - Dijkstra (2)
 float Graph::dijkstra(int idSource, int idTarget)
 {
     
 }
 
-void topologicalSorting()
+//Caminho Minimo entre dois vertices - Floyd (3)
+float Graph::floydMarshall(int idSource, int idTarget)
+{
+    
+}
+
+//Arvore Geradora Minima de Prim (4)
+Graph* agmPrim()
 {
 
+}
+
+//Arvore Geradora Minima de Kruskal (5)
+Graph* agmKuskal()
+{
+
+}
+
+void Graph::breadthFirstSearch(ofstream &output_file)
+{
+    
 }
 
 void breadthFirstSearch(ofstream& output_file)
@@ -164,17 +181,7 @@ void breadthFirstSearch(ofstream& output_file)
 
 }
 
-Graph* getVertexInduced(int* listIdNodes)
-{
-
-}
-
-Graph* agmKuskal()
-{
-
-}
-
-Graph* agmPrim()
+void topologicalSorting()
 {
 
 }
