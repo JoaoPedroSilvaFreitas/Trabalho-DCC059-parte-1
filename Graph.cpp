@@ -37,6 +37,23 @@ Graph::~Graph()
     }
 }
 
+//Construtor subgrafo vertice induzido
+Graph::Graph(int* listIdNodes, bool directed, bool weighted_edge, bool weighted_node)
+{
+    this->order = sizeof(listIdNodes);
+    this->directed = directed;
+    this->weighted_edge = weighted_edge;
+    this->weighted_node = weighted_node;
+    this->first_node = this->last_node = nullptr;
+    this->number_edges = 0;
+
+    //Adicionando os nós pela lista de Id
+    for(int i = 0; i < order; i++)
+    {
+        insertNode(listIdNodes[i]);
+    }
+}
+
 
 // Getters
 int Graph::getOrder()
@@ -144,7 +161,48 @@ Node *Graph::getNode(int id)
 //Subgrafo induzido por subconjunto de vertices (1)
 Graph* Graph::getVertexInduced(int* listIdNodes)
 {
+    //Criando um novo grafo
+    Graph* sub_grafo = new Graph(listIdNodes, getDirected(), getWeightedEdge(), getWeightedNode());
+    Node* aux;
+    if(!sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode())//Caso o grafo não tenha peso nos nós e arestas
+    {
+        //Adicionando arestas
+        for(int i = 0; i < sub_grafo->getOrder(); i++)
+        {
+            aux = sub_grafo->getNode(listIdNodes[i]);
+            for(int j = 0; j < sub_grafo->getOrder(); i++)
+            {
+                if(aux->hasEdgeBetween(j))
+                {
+                    sub_grafo->insertEdge(i,j,1);
+                }
+            }
+        }
+    }
+    else if(sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode() )//Caso o grafo tenha peso nas arestas
+    {
+        //Adicionando arestas
+        for(int i = 0; i < sub_grafo->getOrder(); i++)
+        {
 
+        }
+    }
+    else if(sub_grafo->getWeightedNode() && !sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós
+    {
+        //Adicionando arestas
+        for(int i = 0; i < sub_grafo->getOrder(); i++)
+        {
+
+        }
+    }
+    else if(sub_grafo->getWeightedNode() && sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós e arestas
+    {
+        //Adicionando arestas
+        for(int i = 0; i < sub_grafo->getOrder(); i++)
+        {
+
+        }
+    }
 }
 
 //Caminho Minimo entre dois vertices - Dijkstra (2)

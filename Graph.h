@@ -14,6 +14,9 @@ class Graph
         Graph(int order, bool directed, bool weighted_edge, bool weighted_node);
         ~Graph();
 
+        //construtor subgrafo
+        Graph(int* listIdNodes, bool directed, bool weighted_edge, bool weighted_node);
+
         //Getters
         int getOrder();
         int getNumberEdges();

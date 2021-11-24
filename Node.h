@@ -35,7 +35,7 @@ class Node
         void decrementOutDegree();
         void incrementInDegree();
         void decrementInDegree();
-        Edge* hasEdgeBetween(int target_id);
+        bool hasEdgeBetween(int target_id);
 
 
         //Minhas funções

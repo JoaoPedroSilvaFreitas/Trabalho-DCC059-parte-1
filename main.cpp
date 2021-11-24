@@ -66,8 +66,7 @@ Graph* Cria_Grafo(ifstream& input_file, int directed, int weightedEdge, int weig
     //Criando objeto grafo
     Graph* graph = new Graph(order, directed, weightedEdge, weightedNode);
 
-    //Caso o grafo não tenha peso nos nós e arestas
-    if(!graph->getWeightedEdge() && !graph->getWeightedNode())
+    if(!graph->getWeightedEdge() && !graph->getWeightedNode())//Caso o grafo não tenha peso nos nós e arestas
     {
         while(input_file >> idNodeSource >> idNodeTarget) 
         {

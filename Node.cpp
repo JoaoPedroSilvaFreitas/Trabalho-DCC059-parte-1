@@ -163,14 +163,14 @@ void Node::decrementOutDegree()
 }
 
 //Procura aresta entre
-Edge* Node::hasEdgeBetween(int target_id)
+bool Node::hasEdgeBetween(int target_id)
 {
     for(Edge *auxEdge = this->first_edge; auxEdge != nullptr; auxEdge = auxEdge->getNextEdge())
     {
         if(auxEdge->getTargetId() == target_id)
-            return auxEdge;
+            return true;
     }
-    return nullptr;
+    return false;
 }
 
 //imprime arestas
