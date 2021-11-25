@@ -75,6 +75,18 @@ int Node::getNumberEdges()
     return number_edges;
 }
 
+Edge* Node::getEdge(int target_id)
+{
+    for(Edge *auxEdge = this->first_edge; auxEdge != nullptr; auxEdge = auxEdge->getNextEdge())
+    {
+        if(auxEdge->getTargetId() == target_id)
+        {
+            return auxEdge;
+        }     
+    }
+    return nullptr;
+}
+
 // Setters
 void Node::setNextNode(Node* next_node)
 {
@@ -168,8 +180,11 @@ bool Node::hasEdgeBetween(int target_id)
     for(Edge *auxEdge = this->first_edge; auxEdge != nullptr; auxEdge = auxEdge->getNextEdge())
     {
         if(auxEdge->getTargetId() == target_id)
+        {
             return true;
+        }     
     }
+
     return false;
 }
 

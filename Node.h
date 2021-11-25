@@ -20,6 +20,7 @@ class Node
         int getOutDegree();
         float getWeight();
         Node* getNextNode();
+        Edge* getEdge(int target_id);
 
 
         // Setters

@@ -15,7 +15,7 @@ class Graph
         ~Graph();
 
         //construtor subgrafo
-        Graph(int* listIdNodes, bool directed, bool weighted_edge, bool weighted_node);
+        Graph(int order, int* listIdNodes, bool directed, bool weighted_edge, bool weighted_node);
 
         //Getters
         int getOrder();
@@ -35,7 +35,7 @@ class Graph
         //methods phase1
         void topologicalSorting();
         void breadthFirstSearch(ofstream& output_file);
-        Graph* getVertexInduced(int* listIdNodes);
+        Graph* getVertexInduced(int* listIdNodes, int OrderSubGraph);
         Graph* agmKuskal();
         Graph* agmPrim();
         float floydMarshall(int idSource, int idTarget);

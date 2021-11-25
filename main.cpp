@@ -7,51 +7,6 @@
 using namespace std;
 
 
-/*ESSA FUNÇÂO PROVAVELMENTE SERÁ REMOVIDA
-
-Graph* Cria_Grafo(Graph* grafo, int order, bool directed, bool weighted_edge, bool weighted_node)
-{
-    int n_edges, target_id;
-    float edge_weight;
-    grafo = new Graph(order, directed, weighted_edge, weighted_node);
-
-    //Insere nós no grafo
-    for(int i = 0; i < order; i++)
-    {
-        grafo->insertNode(i);
-    }
-    
-    //insere arestas no grafo
-    for(int i = 0; i < order; i++)
-    {
-        cout << "Node [" << i << "] number of edges:";
-        cin >> n_edges;
-        for(int j = 0; j < n_edges; j++)
-        {
-            if(weighted_edge == true)
-            {
-                cout << "edge from " << i << " to:";
-                cin >> target_id;
-                cout << "edge weight:";
-                cin >> edge_weight;
-                grafo->insertEdge(i,target_id,edge_weight);
-            }
-            else
-            {
-                cout << "edge from " << i << " to:";
-                cin >> target_id;
-                grafo->insertEdge(i,target_id,1);
-            }                 
-        }
-    }
-
-    //imprime a lista apos sua criação
-    grafo->Print_Ad_list();
-}
-
-*/
-
-
 Graph* Cria_Grafo(ifstream& input_file, int directed, int weightedEdge, int weightedNode)
 {
 
@@ -118,33 +73,6 @@ Graph* Cria_Grafo(ifstream& input_file, int directed, int weightedEdge, int weig
 }
 
 
-/* ESSA FUNÇÃO PROVAVELMENTE É DESNESSESSÁRIA
-Graph* ler_Arquivo(ifstream& input_file, int directed, int weightedEdge, int weightedNode)
-{
-    //Variáveis para auxiliar na criação dos nós no Grafo
-    int idNodeSource;
-    int idNodeTarget;
-    int order;
-
-    //Pegando a ordem do grafo
-    input_file >> order;
-
-    //Criando grafo
-    Graph* graph;
-    graph = Cria_Grafo(input_file, directed, weightedEdge, weightedNode);
-    //Graph* graph = new Graph(order, directed, weightedEdge, weightedNode);
-
-    //Lê arquivo de entrada e insere arestas
-    while(input_file >> idNodeSource >> idNodeTarget) 
-    {
-        graph->insertEdge(idNodeSource, idNodeTarget, 0);
-    }
-
-    return graph;
-}
-*/
-
-
 char MainMenu(Graph* grafo)
 {
     char opt = 'd';
@@ -169,13 +97,27 @@ char MainMenu(Graph* grafo)
 
 void AuxMainMenu(Graph* grafo)
 {
-    char opt = 'z';
+    char opt = 'd';
         while(opt != '0')
         {
             opt = MainMenu(grafo);
+            //Subgrafo induzido por conjunto de vertices
             if(opt == '1')
             {
+                int OrderSubGraph;
+                Graph* sub_grafo;
+                cout << "Ordem do subgrafo vertice induzido:";
+                cin >> OrderSubGraph;
+                int* listIdNodes = new int[OrderSubGraph];
+                cout << "Conjunto de Id dos nos:" << endl;
+                for(int i = 0; i < OrderSubGraph; i++)
+                {
+                    cin >> listIdNodes[i];
+                }
+                sub_grafo = grafo->getVertexInduced(listIdNodes, OrderSubGraph);
 
+                //print pra ver se deu certo
+                sub_grafo->Print_Ad_list();
             }
             if(opt == '2')
             {

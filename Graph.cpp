@@ -3,13 +3,13 @@
 #include "Edge.h"
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
 // Constructor & Destructor
 Graph::Graph(int order, bool directed, bool weighted_edge, bool weighted_node)
 {
-
     this->order = order;
     this->directed = directed;
     this->weighted_edge = weighted_edge;
@@ -38,9 +38,9 @@ Graph::~Graph()
 }
 
 //Construtor subgrafo vertice induzido
-Graph::Graph(int* listIdNodes, bool directed, bool weighted_edge, bool weighted_node)
+Graph::Graph(int order, int* listIdNodes, bool directed, bool weighted_edge, bool weighted_node)
 {
-    this->order = sizeof(listIdNodes);
+    this->order = order;
     this->directed = directed;
     this->weighted_edge = weighted_edge;
     this->weighted_node = weighted_node;
@@ -102,6 +102,11 @@ void Graph::insertNode(int id)
 
     insert_aux++;
     if(insert_aux == 1) first_node = node;
+
+    if(!getWeightedNode())
+    {
+        node->setWeight(1);
+    }
 }
 
 //insere arestas
@@ -159,50 +164,74 @@ Node *Graph::getNode(int id)
 //FUNÇÕES PARTE 1
 
 //Subgrafo induzido por subconjunto de vertices (1)
-Graph* Graph::getVertexInduced(int* listIdNodes)
+Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 {
     //Criando um novo grafo
-    Graph* sub_grafo = new Graph(listIdNodes, getDirected(), getWeightedEdge(), getWeightedNode());
-    Node* aux;
+    Graph* sub_grafo = new Graph(OrderSubGraph, listIdNodes, getDirected(), getWeightedEdge(), getWeightedNode());
+    Node* node;
     if(!sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode())//Caso o grafo não tenha peso nos nós e arestas
     {
-        //Adicionando arestas
         for(int i = 0; i < sub_grafo->getOrder(); i++)
         {
-            aux = sub_grafo->getNode(listIdNodes[i]);
-            for(int j = 0; j < sub_grafo->getOrder(); i++)
+            node = getNode(listIdNodes[i]);
+            for(int j = 0; j < sub_grafo->getOrder(); j++)
             {
-                if(aux->hasEdgeBetween(j))
+                if(node->hasEdgeBetween(listIdNodes[j]))
                 {
-                    sub_grafo->insertEdge(i,j,1);
+                    sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
                 }
             }
         }
     }
     else if(sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode() )//Caso o grafo tenha peso nas arestas
     {
-        //Adicionando arestas
+        Edge* edge;
         for(int i = 0; i < sub_grafo->getOrder(); i++)
         {
-
+            node = getNode(listIdNodes[i]);
+            for(int j = 0; j < sub_grafo->getOrder(); j++)
+            {
+                if(node->hasEdgeBetween(listIdNodes[j]))
+                {
+                    edge = node->getEdge(listIdNodes[j]);
+                    sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],edge->getWeight());
+                }
+            }
         }
     }
     else if(sub_grafo->getWeightedNode() && !sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós
     {
-        //Adicionando arestas
         for(int i = 0; i < sub_grafo->getOrder(); i++)
         {
-
+            node = getNode(listIdNodes[i]);
+            for(int j = 0; j < sub_grafo->getOrder(); j++)
+            {
+                if(node->hasEdgeBetween(listIdNodes[j]))
+                {
+                    node->setWeight(getNode(listIdNodes[i])->getWeight());
+                    sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
+                }
+            }
         }
     }
     else if(sub_grafo->getWeightedNode() && sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós e arestas
     {
-        //Adicionando arestas
+        Edge* edge;
         for(int i = 0; i < sub_grafo->getOrder(); i++)
         {
-
+            node = sub_grafo->getNode(listIdNodes[i]);
+            for(int j = 0; j < sub_grafo->getOrder(); j++)
+            {
+                if(node->hasEdgeBetween(listIdNodes[j]))
+                {
+                    edge = node->getEdge(listIdNodes[j]);
+                    node->setWeight(getNode(listIdNodes[i])->getWeight());
+                    sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],edge->getWeight());
+                }
+            }
         }
     }
+    return sub_grafo;
 }
 
 //Caminho Minimo entre dois vertices - Dijkstra (2)
