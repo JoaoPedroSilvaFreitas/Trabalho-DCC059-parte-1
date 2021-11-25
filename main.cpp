@@ -75,19 +75,20 @@ Graph* Cria_Grafo(ifstream& input_file, int directed, int weightedEdge, int weig
 
 char MainMenu(Graph* grafo)
 {
-    char opt = 'd';
+    char opt = '1';
     cout << "----------------Main Menu-----------------" << endl;
-    cout << "1- Subgrafo induzido por conjunto de vertices" << endl;
-    cout << "2- Caminho Minimo entre dois vertices - Dijkstra" << endl;
-    cout << "3- Caminho Minimo entre dois vertices - Floyd" << endl;
-    cout << "4- Arvore Geradora Minima de Prim" << endl;
-    cout << "5- Arvore Geradora Minima de Kruskal" << endl;
-    cout << "6- Imprimir caminhamento em largura" << endl;
-    cout << "7- Imprimir ordenacao topologica" << endl;
-    cout << "8- Algoritmo Guloso" << endl;
-    cout << "9- Algoritmo Guloso Randomizado " << endl;
-    cout << "A- Algoritmo Guloso Randomizado Reativo" << endl;
-    cout << "B- Imprime lista de adjacencia" << endl;
+    cout << "A- Subgrafo induzido por conjunto de vertices" << endl;
+    cout << "B- " << endl;
+    cout << "C- Caminho Minimo entre dois vertices - Dijkstra" << endl;
+    cout << "D- Caminho Minimo entre dois vertices - Floyd" << endl;
+    cout << "E- Arvore Geradora Minima de Prim" << endl;
+    cout << "F- Arvore Geradora Minima de Kruskal" << endl;
+    cout << "G- Imprimir caminhamento em largura" << endl;
+    cout << "H- Imprimir ordenacao topologica" << endl;
+    cout << "I- Algoritmo Guloso" << endl;
+    cout << "J- Algoritmo Guloso Randomizado " << endl;
+    cout << "K- Algoritmo Guloso Randomizado Reativo" << endl;
+    cout << "L- Imprime lista de adjacencia" << endl;
     cout << "0- Sair" << endl;
     cout << "------------------------------------------" << endl;
     cin >> opt;
@@ -102,7 +103,7 @@ void AuxMainMenu(Graph* grafo)
         {
             opt = MainMenu(grafo);
             //Subgrafo induzido por conjunto de vertices
-            if(opt == '1')
+            if(opt == 'a')
             {
                 int OrderSubGraph;
                 Graph* sub_grafo;
@@ -119,49 +120,19 @@ void AuxMainMenu(Graph* grafo)
                 //print pra ver se deu certo
                 sub_grafo->Print_Ad_list();
             }
-            if(opt == '2')
+            if(opt == 'c')
             {
-                
+                int idSource, idTarget;
+                cout << "Menor distancia de:";
+                cin >> idSource;
+                cout << "Ate:";
+                cin >> idTarget;
+                grafo->dijkstra(idSource,idTarget);
             }
-            if(opt == '3')
-            {
-                
-            }
-            if(opt == '4')
-            {
-                
-            }
-            if(opt == '5')
-            {
-                
-            }
-            if(opt == '6')
-            {
-                
-            }
-            if(opt == '7')
-            {
-                
-            }
-            if(opt == '8')
-            {
-                
-            }
-            if(opt == '9')
-            {
-                
-            }
-            if(opt == 'a')
-            {
-                
-            }
-            if(opt == 'b')
+            
+            if(opt == 'k')
             {
                 grafo->Print_Ad_list();
-            }
-            else if(opt == '0')
-            {
-                return;
             }
         }
 }

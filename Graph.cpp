@@ -163,7 +163,8 @@ Node *Graph::getNode(int id)
 
 //FUNÇÕES PARTE 1
 
-//Subgrafo induzido por subconjunto de vertices (1)
+//Subgrafo induzido por subconjunto de vertices (A)
+//Preciso concertar essa função porque esta adicionando duas vezes
 Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 {
     //Criando um novo grafo
@@ -174,6 +175,7 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
         for(int i = 0; i < sub_grafo->getOrder(); i++)
         {
             node = getNode(listIdNodes[i]);
+
             for(int j = 0; j < sub_grafo->getOrder(); j++)
             {
                 if(node->hasEdgeBetween(listIdNodes[j]))
@@ -234,25 +236,25 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
     return sub_grafo;
 }
 
-//Caminho Minimo entre dois vertices - Dijkstra (2)
+//Caminho Minimo entre dois vertices - Dijkstra (C)
 float Graph::dijkstra(int idSource, int idTarget)
 {
     
 }
 
-//Caminho Minimo entre dois vertices - Floyd (3)
+//Caminho Minimo entre dois vertices - Floyd (D)
 float Graph::floydMarshall(int idSource, int idTarget)
 {
     
 }
 
-//Arvore Geradora Minima de Prim (4)
+//Arvore Geradora Minima de Prim (E)
 Graph* agmPrim()
 {
 
 }
 
-//Arvore Geradora Minima de Kruskal (5)
+//Arvore Geradora Minima de Kruskal (F)
 Graph* agmKuskal()
 {
 
