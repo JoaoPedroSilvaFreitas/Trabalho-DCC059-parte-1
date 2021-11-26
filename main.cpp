@@ -76,21 +76,18 @@ Graph* Cria_Grafo(ifstream& input_file, int directed, int weightedEdge, int weig
 char MainMenu(Graph* grafo)
 {
     char opt = '1';
-    cout << "----------------Main Menu-----------------" << endl;
-    cout << "A- Subgrafo induzido por conjunto de vertices" << endl;
-    cout << "B- " << endl;
+    cout << "--------------------------------Main Menu---------------------------------" << endl;
+    cout << "A- Subgrafo induzido por conjunto de vertices(Direto)" << endl;
+    cout << "B- Subgrafo induzido por conjunto de vertices(Indireto)" << endl;
     cout << "C- Caminho Minimo entre dois vertices - Dijkstra" << endl;
     cout << "D- Caminho Minimo entre dois vertices - Floyd" << endl;
     cout << "E- Arvore Geradora Minima de Prim" << endl;
     cout << "F- Arvore Geradora Minima de Kruskal" << endl;
     cout << "G- Imprimir caminhamento em largura" << endl;
     cout << "H- Imprimir ordenacao topologica" << endl;
-    cout << "I- Algoritmo Guloso" << endl;
-    cout << "J- Algoritmo Guloso Randomizado " << endl;
-    cout << "K- Algoritmo Guloso Randomizado Reativo" << endl;
-    cout << "L- Imprime lista de adjacencia" << endl;
+    cout << "I- Imprime lista de adjacencia" << endl;
     cout << "0- Sair" << endl;
-    cout << "------------------------------------------" << endl;
+    cout << "--------------------------------------------------------------------------" << endl;
     cin >> opt;
     return opt;
 }
@@ -98,12 +95,12 @@ char MainMenu(Graph* grafo)
 
 void AuxMainMenu(Graph* grafo)
 {
-    char opt = 'd';
+    char opt = '1';
         while(opt != '0')
         {
             opt = MainMenu(grafo);
-            //Subgrafo induzido por conjunto de vertices
-            if(opt == 'a')
+            //Subgrafo induzido por conjunto de vertices TALVEZ EU TENHA QUE MUDAR TUDO ISSO
+            if(opt == 'a' || opt == 'A')
             {
                 int OrderSubGraph;
                 Graph* sub_grafo;
@@ -118,9 +115,14 @@ void AuxMainMenu(Graph* grafo)
                 sub_grafo = grafo->getVertexInduced(listIdNodes, OrderSubGraph);
 
                 //print pra ver se deu certo
+                //função print tem erros
                 sub_grafo->Print_Ad_list();
             }
-            if(opt == 'c')
+            if(opt == 'b' || opt == 'B')
+            {
+
+            }
+            if(opt == 'c' || opt == 'C')
             {
                 int idSource, idTarget;
                 cout << "Menor distancia de:";
@@ -130,7 +132,7 @@ void AuxMainMenu(Graph* grafo)
                 grafo->dijkstra(idSource,idTarget);
             }
             
-            if(opt == 'k')
+            if(opt == 'i' || opt == 'I')
             {
                 grafo->Print_Ad_list();
             }

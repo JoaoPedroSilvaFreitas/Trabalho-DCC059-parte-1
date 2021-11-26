@@ -16,6 +16,7 @@ Graph::Graph(int order, bool directed, bool weighted_edge, bool weighted_node)
     this->weighted_node = weighted_node;
     this->first_node = this->last_node = nullptr;
     this->number_edges = 0;
+    this->insert_aux = 0;
 
     //Função para inserir nós
     for(int i = 0; i < order; i++)
@@ -46,6 +47,7 @@ Graph::Graph(int order, int* listIdNodes, bool directed, bool weighted_edge, boo
     this->weighted_node = weighted_node;
     this->first_node = this->last_node = nullptr;
     this->number_edges = 0;
+    this->insert_aux = 0;
 
     //Adicionando os nós pela lista de Id
     for(int i = 0; i < order; i++)
@@ -175,7 +177,6 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
         for(int i = 0; i < sub_grafo->getOrder(); i++)
         {
             node = getNode(listIdNodes[i]);
-
             for(int j = 0; j < sub_grafo->getOrder(); j++)
             {
                 if(node->hasEdgeBetween(listIdNodes[j]))
@@ -239,7 +240,7 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 //Caminho Minimo entre dois vertices - Dijkstra (C)
 float Graph::dijkstra(int idSource, int idTarget)
 {
-    
+
 }
 
 //Caminho Minimo entre dois vertices - Floyd (D)

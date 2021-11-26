@@ -46,7 +46,7 @@ class Graph
 
     private:
     
-        int insert_aux = 0;
+        int insert_aux;
         int order;
         int number_edges;
         bool directed;
