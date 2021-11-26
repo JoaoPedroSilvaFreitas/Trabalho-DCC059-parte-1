@@ -35,7 +35,7 @@ class Graph
         //methods phase1
         void topologicalSorting();
         void breadthFirstSearch(ofstream& output_file);
-        //Graph* getVertexInduced(int* listIdNodes, int OrderSubGraph);
+        Graph* getVertexInduced(int* listIdNodes, int OrderSubGraph);
         Graph* getVertexInducedDirect(int idSource);
         Graph* getVertexInducedIndirect(int idSource);
         Graph* agmKuskal();

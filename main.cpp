@@ -109,6 +109,7 @@ void AuxMainMenu(Graph* grafo)
                     cout << "Vertice:";
                     cin >> idSource;
                     grafoDireto = grafo->getVertexInducedDirect(idSource);
+                    grafoDireto->Print_Ad_list();
                 }else
                 cout << "ERRO: Grafo nao direcionado!" << endl;
             }
@@ -122,6 +123,7 @@ void AuxMainMenu(Graph* grafo)
                     cout << "Vertice:";
                     cin >> idSource;
                     grafoIndireto = grafo->getVertexInducedIndirect(idSource);
+                    grafoIndireto->Print_Ad_list();
                 }else
                 cout << "ERRO: Grafo nao direcionado!" << endl;
             }
@@ -144,8 +146,6 @@ void AuxMainMenu(Graph* grafo)
             //Subgrafo induzido por conjunto de vertices
             if(opt == 'j' || opt == 'J')
             {
-                //PROVAVELMENTE UMA FUNÇÃO INUTIL
-                /*
                 int OrderSubGraph;
                 Graph* sub_grafo;
                 cout << "Ordem do subgrafo vertice induzido:";
@@ -162,7 +162,6 @@ void AuxMainMenu(Graph* grafo)
                 //print pra ver se deu certo
                 //função print tem erros
                 sub_grafo->Print_Ad_list();
-                */
             }
         }
 }
