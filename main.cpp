@@ -77,8 +77,8 @@ char MainMenu(Graph* grafo)
 {
     char opt = '1';
     cout << "--------------------------------Main Menu---------------------------------" << endl;
-    cout << "A- Subgrafo induzido por conjunto de vertices(Direto)" << endl;
-    cout << "B- Subgrafo induzido por conjunto de vertices(Indireto)" << endl;
+    cout << "A- Subgrafo vertice-induzido pelo fecho transitivo direto(DIRECIONADO)" << endl;
+    cout << "B- Subgrafo vertice-induzido pelo fecho transitivo indireto(DIRECIONADO)" << endl;
     cout << "C- Caminho Minimo entre dois vertices - Dijkstra" << endl;
     cout << "D- Caminho Minimo entre dois vertices - Floyd" << endl;
     cout << "E- Arvore Geradora Minima de Prim" << endl;
@@ -86,6 +86,7 @@ char MainMenu(Graph* grafo)
     cout << "G- Imprimir caminhamento em largura" << endl;
     cout << "H- Imprimir ordenacao topologica" << endl;
     cout << "I- Imprime lista de adjacencia" << endl;
+    cout << "J- Subgrafo induzido por conjunto de vertices" << endl;
     cout << "0- Sair" << endl;
     cout << "--------------------------------------------------------------------------" << endl;
     cin >> opt;
@@ -99,29 +100,32 @@ void AuxMainMenu(Graph* grafo)
         while(opt != '0')
         {
             opt = MainMenu(grafo);
-            //Subgrafo induzido por conjunto de vertices TALVEZ EU TENHA QUE MUDAR TUDO ISSO
             if(opt == 'a' || opt == 'A')
             {
-                int OrderSubGraph;
-                Graph* sub_grafo;
-                cout << "Ordem do subgrafo vertice induzido:";
-                cin >> OrderSubGraph;
-                int* listIdNodes = new int[OrderSubGraph];
-                cout << "Conjunto de Id dos nos:" << endl;
-                for(int i = 0; i < OrderSubGraph; i++)
+                if(grafo->getDirected())
                 {
-                    cin >> listIdNodes[i];
-                }
-                sub_grafo = grafo->getVertexInduced(listIdNodes, OrderSubGraph);
-
-                //print pra ver se deu certo
-                //função print tem erros
-                sub_grafo->Print_Ad_list();
+                    Graph* grafoDireto;
+                    int idSource;
+                    cout << "Vertice:";
+                    cin >> idSource;
+                    grafoDireto = grafo->getVertexInducedDirect(idSource);
+                }else
+                cout << "ERRO: Grafo nao direcionado!" << endl;
             }
+
             if(opt == 'b' || opt == 'B')
             {
-
+                if(grafo->getDirected())
+                {
+                    Graph* grafoIndireto;
+                    int idSource;
+                    cout << "Vertice:";
+                    cin >> idSource;
+                    grafoIndireto = grafo->getVertexInducedIndirect(idSource);
+                }else
+                cout << "ERRO: Grafo nao direcionado!" << endl;
             }
+
             if(opt == 'c' || opt == 'C')
             {
                 int idSource, idTarget;
@@ -135,6 +139,30 @@ void AuxMainMenu(Graph* grafo)
             if(opt == 'i' || opt == 'I')
             {
                 grafo->Print_Ad_list();
+            }
+
+            //Subgrafo induzido por conjunto de vertices
+            if(opt == 'j' || opt == 'J')
+            {
+                //PROVAVELMENTE UMA FUNÇÃO INUTIL
+                /*
+                int OrderSubGraph;
+                Graph* sub_grafo;
+                cout << "Ordem do subgrafo vertice induzido:";
+                cin >> OrderSubGraph;
+                int* listIdNodes = new int[OrderSubGraph];
+                cout << "Conjunto de Id dos nos:" << endl;
+                for(int i = 0; i < OrderSubGraph; i++)
+                {
+                    cin >> listIdNodes[i];
+                }
+
+                sub_grafo = grafo->getVertexInduced(listIdNodes, OrderSubGraph);
+
+                //print pra ver se deu certo
+                //função print tem erros
+                sub_grafo->Print_Ad_list();
+                */
             }
         }
 }

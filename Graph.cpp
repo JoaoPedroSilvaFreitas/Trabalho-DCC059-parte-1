@@ -39,6 +39,7 @@ Graph::~Graph()
 }
 
 //Construtor subgrafo vertice induzido
+/*
 Graph::Graph(int order, int* listIdNodes, bool directed, bool weighted_edge, bool weighted_node)
 {
     this->order = order;
@@ -55,7 +56,7 @@ Graph::Graph(int order, int* listIdNodes, bool directed, bool weighted_edge, boo
         insertNode(listIdNodes[i]);
     }
 }
-
+*/
 
 // Getters
 int Graph::getOrder()
@@ -165,20 +166,24 @@ Node *Graph::getNode(int id)
 
 //FUNÇÕES PARTE 1
 
-//Subgrafo induzido por subconjunto de vertices (A)
-//Preciso concertar essa função porque esta adicionando duas vezes
+//PROVAVELMENTE UMA FUNÇÃO INUTIL
+//Subgrafo induzido por subconjunto de vertices (J)
+/*
 Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 {
     //Criando um novo grafo
     Graph* sub_grafo = new Graph(OrderSubGraph, listIdNodes, getDirected(), getWeightedEdge(), getWeightedNode());
     Node* node;
+    Node* aux;
     if(!sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode())//Caso o grafo não tenha peso nos nós e arestas
     {
         for(int i = 0; i < sub_grafo->getOrder(); i++)
         {
+            //aponta para o nó do grafo antigo que possui o mesmo id no grafo novo
             node = getNode(listIdNodes[i]);
             for(int j = 0; j < sub_grafo->getOrder(); j++)
             {
+                aux = getNode(listIdNodes[j]);
                 if(node->hasEdgeBetween(listIdNodes[j]))
                 {
                     sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
@@ -235,6 +240,41 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
         }
     }
     return sub_grafo;
+}
+*/
+
+//Subgrafo vertice-induzido pelo fecho transitivo direto (A)
+Graph* Graph::getVertexInducedDirect(int idSource)
+{
+    //TUDO ERRADO
+    Graph* sub_grafo;
+    Node* node = getNode(idSource);
+    Node* aux;
+    
+    int OrderSubGraph = node->getNumberEdges();
+    int* listIdNodes = new int[OrderSubGraph+1];
+    int j = 1;
+    listIdNodes[0] = idSource;
+    //Cria uma lista com o id dos nós que fazem parte do novo grafo
+    for(int i = 0; i < order; i++)
+    {
+        if(node->hasEdgeBetween(i))
+        {
+            aux = getNode(i);
+            listIdNodes[j] = aux->getId();
+            j++;
+        }
+    } 
+
+    //sub_grafo = getVertexInduced(listIdNodes,OrderSubGraph);
+
+    return sub_grafo;
+}
+
+//Subgrafo vertice-induzido pelo fecho transitivo indireto (B)
+Graph* Graph::getVertexInducedIndirect(int idSource)
+{
+
 }
 
 //Caminho Minimo entre dois vertices - Dijkstra (C)

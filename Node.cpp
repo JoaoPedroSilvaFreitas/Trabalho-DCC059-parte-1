@@ -128,12 +128,9 @@ void Node::removeAllEdges()
         Edge* aux = this->first_edge;
         while(aux != nullptr)
         {
-
             next = aux->getNextEdge();
             delete aux;
-
         }
-
     }
     this->first_edge = this->last_edge = nullptr;
 }
@@ -184,7 +181,6 @@ bool Node::hasEdgeBetween(int target_id)
             return true;
         }     
     }
-
     return false;
 }
 
