@@ -92,7 +92,7 @@ bool Graph::getWeightedNode()
     return this->weighted_node;
 }
 
-//insere nós
+//insere nó
 void Graph::insertNode(int id)
 {
     Node* node = new Node(id);
@@ -110,7 +110,7 @@ void Graph::insertNode(int id)
     }
 }
 
-//insere arestas
+//insere aresta
 void Graph::insertEdge(int id, int target_id, float weight)
 {
     //Caso o grafo seja direcionado
@@ -163,8 +163,7 @@ Node *Graph::getNode(int id)
 }
 
 //FUNÇÕES PARTE 1
-
-//Subgrafo induzido por subconjunto de vertices (J)
+//Subgrafo induzido por subconjunto de vertices (J) Erro quando grafo não é direcionado, a função adiciona a mesma aresta duas vezes
 Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 {
     //Criando um novo grafo
@@ -239,21 +238,60 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 }
 
 //Subgrafo vertice-induzido pelo fecho transitivo direto (A)
+//INCOMPLETO
+void Graph::auxVertexInduced(Node* node)
+{
+    node->setVisitado(true);
+
+    for(Node* aux = node->getNextNode(); aux != nullptr; aux = aux->getNextNode())
+    {
+        if(aux->getVisitado() == false)
+        {
+            auxVertexInduced(aux);
+            cout << aux->getId() << endl;
+        }
+    }
+}
+
+//INCOMPLETO
 Graph* Graph::getVertexInducedDirect(int idSource)
 {
-    
+    Node* node = getNode(idSource);
+    Node* aux;
+    int SubOrder;
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        aux->setVisitado(false);
+    }
+    auxVertexInduced(node);
 }
 
 //Subgrafo vertice-induzido pelo fecho transitivo indireto (B)
+//INCOMPLETO
 Graph* Graph::getVertexInducedIndirect(int idSource)
 {
-
+Node* node = getNode(idSource);
+    Node* aux;
+    int SubOrder;
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        aux->setVisitado(false);
+    }
+    auxVertexInduced(node);
 }
 
 //Caminho Minimo entre dois vertices - Dijkstra (C)
 float Graph::dijkstra(int idSource, int idTarget)
 {
-
+    Node* node = getNode(idSource);
+    Node* aux;
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        aux->setVisitado(false);
+    }
 }
 
 //Caminho Minimo entre dois vertices - Floyd (D)

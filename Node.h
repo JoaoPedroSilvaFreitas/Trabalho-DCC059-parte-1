@@ -21,11 +21,13 @@ class Node
         float getWeight();
         Node* getNextNode();
         Edge* getEdge(int target_id);
+        bool getVisitado();
 
 
         // Setters
         void setNextNode(Node* node);
         void setWeight(float weight);
+        void setVisitado(bool val);
 
 
         // Other methods
@@ -53,6 +55,8 @@ class Node
         unsigned int out_degree;
         float weight;
         Node* next_node;
+
+        bool visitado;
 };
 
 #endif // NODE_H_INCLUDED
