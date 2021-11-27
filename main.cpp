@@ -85,7 +85,8 @@ char MainMenu(Graph* grafo)
     cout << "F- Arvore Geradora Minima de Kruskal" << endl;
     cout << "G- Imprimir caminhamento em largura" << endl;
     cout << "H- Imprimir ordenacao topologica" << endl;
-    cout << "I- Imprime lista de adjacencia" << endl;
+    cout << "----------------------------Funcoes adicionais----------------------------" << endl;
+    cout << "I- Imprime lista original" << endl;
     cout << "J- Subgrafo induzido por conjunto de vertices" << endl;
     cout << "0- Sair" << endl;
     cout << "--------------------------------------------------------------------------" << endl;

@@ -237,8 +237,7 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
     return sub_grafo;
 }
 
-//Subgrafo vertice-induzido pelo fecho transitivo direto (A)
-//INCOMPLETO
+//Auxiliar das funções (A) e (B)
 void Graph::auxVertexInduced(Node* node)
 {
     node->setVisitado(true);
@@ -247,40 +246,100 @@ void Graph::auxVertexInduced(Node* node)
         if((aux->getVisitado() == false) && (node->searchEdge(aux->getId())))
         {
             auxVertexInduced(aux);
-            cout << aux->getId() << endl;
         }
     }
-
-    //criar uma lista aqui depois do for
 }
 
-//INCOMPLETO
+//Subgrafo vertice-induzido pelo fecho transitivo direto (A)
 Graph* Graph::getVertexInducedDirect(int idSource)
 {
     Node* node = getNode(idSource);
     Node* aux;
-    int SubOrder;
+    Graph* Sub_grafo;
+
+    int* listIdNodes;
+    int SubOrder = 0;
+
+    //Setando todos nos como não visitados
     for(int i = 0; i < order; i++)
     {
         aux = getNode(i);
         aux->setVisitado(false);
     }
     auxVertexInduced(node);
+
+    //for para pegar quantos nós foram visitados
+    for(int i = 0; i < order; i++)
+    {
+        node = getNode(i);
+        if(node->getVisitado() == true)
+        {
+            SubOrder++;
+        }
+    }
+    listIdNodes = new int[SubOrder];
+
+    //for para preencher a lista de inteiro com o id dos nós visitados
+    int j = 0;
+    for(int i = 0; i < order; i++)
+    {
+        node = getNode(i);
+        if(node->getVisitado() == true)
+        {
+            listIdNodes[j] = node->getId();
+            j++;
+        }
+    }
+
+    //criando subgrafo vertice induzido com os nós visitados
+    Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
+    return Sub_grafo;
 }
 
 //Subgrafo vertice-induzido pelo fecho transitivo indireto (B)
-//INCOMPLETO
 Graph* Graph::getVertexInducedIndirect(int idSource)
 {
-Node* node = getNode(idSource);
+    Node* node = getNode(idSource);
     Node* aux;
-    int SubOrder;
+    Graph* Sub_grafo;
+
+    int* listIdNodes;
+    int SubOrder = 0;
+
+    //Setando todos nos como não visitados
     for(int i = 0; i < order; i++)
     {
         aux = getNode(i);
         aux->setVisitado(false);
     }
     auxVertexInduced(node);
+
+    //for para pegar quantos nós foram visitados
+    for(int i = 0; i < order; i++)
+    {
+        node = getNode(i);
+        if(node->getVisitado() == false)
+        {
+            SubOrder++;
+        }
+    }
+    listIdNodes = new int[SubOrder];
+
+    //for para preencher a lista de inteiro com o id dos nós visitados
+    int j = 0;
+    for(int i = 0; i < order; i++)
+    {
+        node = getNode(i);
+        if(node->getVisitado() == false)
+        {
+            listIdNodes[j] = node->getId();
+            j++;
+        }
+    }
+
+    //criando subgrafo vertice induzido com os nós visitados
+    Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
+    return Sub_grafo;
 }
 
 //Caminho Minimo entre dois vertices - Dijkstra (C)

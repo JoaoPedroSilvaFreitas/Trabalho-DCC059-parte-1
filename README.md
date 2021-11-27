@@ -3,7 +3,7 @@ Primeira parte do trabalho de teoria dos grafos 2021.3
 
 
 -Parametros para iniciar o programa:
-Nome_do_programa    Nome_do_arquivo_de_entrada.dot    (0 ou 1)   (0 ou 1)    (0 ou 1)
+Nome_do_programa    Nome_do_arquivo_de_entrada.dot  Nome_do_arquivo_de_saida.dot (0 ou 1)   (0 ou 1)    (0 ou 1)
 
 comando para compilar: cd "path do programa" ; if ($?) { g++ main.cpp Graph.cpp Node.cpp Edge.cpp -o main } ; if ($?) { .\main Grafo.dot GrafoO.dot (0 ou 1) (0 ou 1) (0 ou 1)}
 
