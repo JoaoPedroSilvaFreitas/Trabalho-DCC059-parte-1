@@ -242,15 +242,16 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 void Graph::auxVertexInduced(Node* node)
 {
     node->setVisitado(true);
-
-    for(Node* aux = node->getNextNode(); aux != nullptr; aux = aux->getNextNode())
+    for(Node* aux = first_node; aux != nullptr; aux = aux->getNextNode())
     {
-        if(aux->getVisitado() == false)
+        if((aux->getVisitado() == false) && (node->searchEdge(aux->getId())))
         {
             auxVertexInduced(aux);
             cout << aux->getId() << endl;
         }
     }
+
+    //criar uma lista aqui depois do for
 }
 
 //INCOMPLETO
