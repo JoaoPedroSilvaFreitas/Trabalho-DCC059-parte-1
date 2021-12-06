@@ -9,6 +9,7 @@ comando para compilar: cd "path do programa" ; if ($?) { g++ main.cpp Graph.cpp 
 
 
 -Formato arquivo Grafo.dot:
+
     -Caso Grafo não tenha peso nos nós ou arestas:
         order
         Id(i)   Id(j)
