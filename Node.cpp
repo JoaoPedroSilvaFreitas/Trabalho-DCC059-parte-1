@@ -92,6 +92,7 @@ bool Node::getVisitado()
     return visitado;
 }
 
+
 // Setters
 void Node::setNextNode(Node* next_node)
 {
@@ -107,6 +108,7 @@ void Node::setVisitado(bool val)
 {
     visitado = val;
 }
+
 
 //insere aresta
 void Node::insertEdge(int target_id, float weight)

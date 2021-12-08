@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <limits>
 
 using namespace std;
 
@@ -162,8 +163,13 @@ Node *Graph::getNode(int id)
     return node;
 }
 
+
+
 //FUNÇÕES PARTE 1
-//Subgrafo induzido por subconjunto de vertices (J) Erro quando grafo não é direcionado, a função adiciona a mesma aresta duas vezes
+
+
+/*Subgrafo induzido por subconjunto de vertices (J) 
+Erro quando grafo não é direcionado, a função adiciona a mesma aresta duas vezes*/
 Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 {
     //Criando um novo grafo
@@ -297,6 +303,9 @@ Graph* Graph::getVertexInducedDirect(int idSource)
 }
 
 //Subgrafo vertice-induzido pelo fecho transitivo indireto (B)
+/*
+Onde eu olhei estava errado tenho que refazer essa função
+*/
 Graph* Graph::getVertexInducedIndirect(int idSource)
 {
     Node* node = getNode(idSource);
@@ -342,17 +351,56 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
     return Sub_grafo;
 }
 
+
+//Auxiliar da função (C) 
+void Graph::AuxDijkstra(Node* nodeSource, Node* nodeTarget, float* Dist)
+{
+    nodeSource->setVisitado(true);
+    for(Node* aux = first_node; aux != nullptr; aux = aux->getNextNode())
+    {
+        if((aux->getVisitado() == false) && (nodeSource->searchEdge(aux->getId())))
+        {
+            
+            Dist[aux->getId()] = Dist[nodeSource->getId()] + nodeSource->getEdge(aux->getId())->getWeight();
+            cout << "[" << aux->getId() << "]" << Dist[aux->getId()] << endl;
+            AuxDijkstra(aux,nodeTarget,Dist);
+            aux->setVisitado(false);
+            /*if(aux == nodeTarget)
+            {
+                nodeTarget->setVisitado(false);
+            }*/
+        }
+    }
+}
+
 //Caminho Minimo entre dois vertices - Dijkstra (C)
 float Graph::dijkstra(int idSource, int idTarget)
 {
-    Node* node = getNode(idSource);
+    Node* nodeSource = getNode(idSource);
+    Node* nodeTarget = getNode(idTarget);
     Node* aux;
+    float* Dist = new float[order];
+
+    //Setando todos os nós como não visitados
     for(int i = 0; i < order; i++)
     {
         aux = getNode(i);
         aux->setVisitado(false);
+        if(aux == nodeSource)
+        {
+            Dist[aux->getId()] = 0;
+        }else
+        Dist[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
     }
+    AuxDijkstra(nodeSource,nodeTarget,Dist);
+
+    for(int i = 0; i < order; i++)
+    {
+        cout << "[" << i << "]:" << Dist[i] << "    ";
+    }
+    cout << endl;
 }
+
 
 //Caminho Minimo entre dois vertices - Floyd (D)
 float Graph::floydMarshall(int idSource, int idTarget)

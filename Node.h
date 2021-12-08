@@ -56,7 +56,9 @@ class Node
         float weight;
         Node* next_node;
 
+        //Atributos auxiliares 
         bool visitado;
+
 };
 
 #endif // NODE_H_INCLUDED

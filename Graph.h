@@ -37,18 +37,24 @@ class Graph
 
         void breadthFirstSearch(ofstream& output_file);
 
+        //Funções (A) (B) e auxiliares
         Graph* getVertexInduced(int* listIdNodes, int OrderSubGraph);
         Graph* getVertexInducedDirect(int idSource);
         Graph* getVertexInducedIndirect(int idSource);
         void auxVertexInduced(Node* node);
 
+        //Funções (C) e auxiliares
+        float dijkstra(int idSource, int idTarget);
+        void AuxDijkstra(Node* node, Node* nodeTarget, float* Dist);
+        
         Graph* agmKuskal();
 
         Graph* agmPrim();
 
         float floydMarshall(int idSource, int idTarget);
 
-        float dijkstra(int idSource, int idTarget);
+
+        
 
         //minhas funções
         void Print_Ad_list();
