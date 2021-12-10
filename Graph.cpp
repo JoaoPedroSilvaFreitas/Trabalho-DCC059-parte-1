@@ -373,21 +373,15 @@ Node* Graph::AuxDijkstraSeleciona(float* Dist, bool* Visitado, Node* source)
     for(int i = 0; i < order; i++)
     {
         aux = getNode(i);
-        if(Visitado[aux->getId()] == false)
+        if(Visitado[aux->getId()] == false && Dist[aux->getId()] < min)
         {
-            if(Dist[aux->getId()] < min)
-            {
                 min = Dist[aux->getId()];
                 aux2 = aux;
-                
-            }
         }
     }
 
     return aux2;
 }
-
-//ERRO COM VERTICES QUE SÓ RECEBEM EX VÉRTICE 5 E 14 DO GRAFO QUE DESENHEI
 
 //Algoritmo de Dijkstra (C)
 float Graph::dijkstra(int idSource, int idTarget)
@@ -397,32 +391,43 @@ float Graph::dijkstra(int idSource, int idTarget)
     float* pi = new float[order];
     bool* S = new bool[order];
 
+    //Chamando função para setar vertices onde a origem não chega como nao visitados;
+    getVertexInducedDirect(idSource);
+    
+    //Inicializando vertices
     for(int i = 0; i < order; i++)
     {
         aux = getNode(i);
+
+        S[aux->getId()] = false;
+        pi[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
+
         if(aux == nodeSource)
         {
             S[aux->getId()] = true;
             pi[aux->getId()] = 0;
-        }else
-            {
-                if(nodeSource->searchEdge(aux->getId()))
-                {
-                    pi[aux->getId()] = nodeSource->getEdge(aux->getId())->getWeight();
-                    S[aux->getId()] = false;
-                }else
-                    {
-                        S[aux->getId()] = false;
-                        pi[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
-                    }
-            }
-            cout << pi[aux->getId()] << endl;
+        }
+
+        if(nodeSource->searchEdge(aux->getId()))
+        {
+            pi[aux->getId()] = nodeSource->getEdge(aux->getId())->getWeight();
+            S[aux->getId()] = false;
+        }
+    }
+
+    //Setando nós onde a origem nunca chega como visitados
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        if(aux->getVisitado() == false)
+        {
+            S[aux->getId()] = true;
+        }
     }
 
     Node* j;
     while(AuxDijkstraVazio(S))
     {
-        
         j = AuxDijkstraSeleciona(pi,S,nodeSource);
         S[j->getId()] = true;
         for(int i = 0; i < order; i++)
