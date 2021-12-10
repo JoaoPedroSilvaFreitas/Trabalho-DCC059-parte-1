@@ -573,6 +573,10 @@ Graph* Graph::Prim(int idSource)
     Graph* Sub_grafo;
     float* val = new float[order];
     int* ant = new int[order];
+
+
+
+
     //Setando todos nos como não visitados
     for(int i = 0; i < order; i++)
     {
