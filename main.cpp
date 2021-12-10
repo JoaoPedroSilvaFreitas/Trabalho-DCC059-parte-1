@@ -107,8 +107,10 @@ void AuxMainMenu(Graph* grafo)
                 {
                     Graph* grafoDireto;
                     int idSource;
-                    cout << "Vertice:";
-                    cin >> idSource;
+                    do{
+                        cout << "Vertice:";
+                        cin >> idSource;
+                    }while(idSource > grafo->getOrder()-1 || idSource < 0);
                     grafoDireto = grafo->getVertexInducedDirect(idSource);
                     grafoDireto->Print_Ad_list();
                 }else
@@ -121,8 +123,10 @@ void AuxMainMenu(Graph* grafo)
                 {
                     Graph* grafoIndireto;
                     int idSource;
-                    cout << "Vertice:";
-                    cin >> idSource;
+                    do{
+                        cout << "Vertice:";
+                        cin >> idSource;
+                    }while(idSource > grafo->getOrder()-1 || idSource < 0);
                     grafoIndireto = grafo->getVertexInducedIndirect(idSource);
                     grafoIndireto->Print_Ad_list();
                 }else
@@ -134,10 +138,14 @@ void AuxMainMenu(Graph* grafo)
                 int idSource, idTarget;
                 float MenorCaminho;
                 cout << "Menor distancia entre:" << endl;
-                cout << "Origem:";
-                cin >> idSource;
-                cout << "Destino:";
-                cin >> idTarget;
+                do{
+                    cout << "Origem:";
+                    cin >> idSource;
+                }while(idSource > grafo->getOrder()-1 || idSource < 0);
+                do{
+                    cout << "Destino:";
+                    cin >> idTarget;
+                }while(idTarget > grafo->getOrder()-1 || idTarget < 0);
                 MenorCaminho = grafo->dijkstra(idSource,idTarget);
                 cout << "Menor distancia entre " << idSource << " e " << idTarget << ": " << MenorCaminho << endl;
             }

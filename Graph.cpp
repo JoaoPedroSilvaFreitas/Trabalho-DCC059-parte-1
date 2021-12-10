@@ -384,10 +384,10 @@ Node* Graph::AuxDijkstraSeleciona(float* Dist, bool* Visitado, Node* source)
         }
     }
 
-    cout << "[" << aux2->getId() << "]: "<< min << endl;
-
     return aux2;
 }
+
+//ERRO COM VERTICES QUE SÓ RECEBEM EX VÉRTICE 5 E 14 DO GRAFO QUE DESENHEI
 
 //Algoritmo de Dijkstra (C)
 float Graph::dijkstra(int idSource, int idTarget)
@@ -406,18 +406,23 @@ float Graph::dijkstra(int idSource, int idTarget)
             pi[aux->getId()] = 0;
         }else
             {
-                S[aux->getId()] = false;
-                pi[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
                 if(nodeSource->searchEdge(aux->getId()))
                 {
                     pi[aux->getId()] = nodeSource->getEdge(aux->getId())->getWeight();
-                }
+                    S[aux->getId()] = false;
+                }else
+                    {
+                        S[aux->getId()] = false;
+                        pi[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
+                    }
             }
+            cout << pi[aux->getId()] << endl;
     }
 
     Node* j;
     while(AuxDijkstraVazio(S))
     {
+        
         j = AuxDijkstraSeleciona(pi,S,nodeSource);
         S[j->getId()] = true;
         for(int i = 0; i < order; i++)
