@@ -352,8 +352,7 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
 }
 
 
-//sem recursividade
-//*
+//Auxiliares da função (C) 
 bool Graph::AuxDijkstraVazio(bool* Visitado)
 {
     for(int i = 0; i < order; i++)
@@ -384,12 +383,13 @@ Node* Graph::AuxDijkstraSeleciona(float* Dist, bool* Visitado, Node* source)
             }
         }
     }
-    
+
     cout << "[" << aux2->getId() << "]: "<< min << endl;
 
     return aux2;
 }
 
+//Algoritmo de Dijkstra (C)
 float Graph::dijkstra(int idSource, int idTarget)
 {
     Node* nodeSource = getNode(idSource);
@@ -436,14 +436,9 @@ float Graph::dijkstra(int idSource, int idTarget)
     return pi[idTarget];
 
 }
-//*/
-
-
 
 
 /*Ta mais pra um algoritmo de prim doque dijkstra
-
-//Auxiliar da função (C) 
 void Graph::AuxDijkstra(Node* nodeSource, Node* nodeTarget, float* Dist)
 {
     for(Node* aux = first_node; aux != nullptr; aux = aux->getNextNode())
@@ -459,8 +454,6 @@ void Graph::AuxDijkstra(Node* nodeSource, Node* nodeTarget, float* Dist)
         }
     }
 }
-
-//Algoritmo de Dijkstra (C)
 float Graph::dijkstra(int idSource, int idTarget)
 {
     Node* nodeSource = getNode(idSource);
@@ -484,8 +477,6 @@ float Graph::dijkstra(int idSource, int idTarget)
 
     cout << "Menor distancia entre [" << nodeSource->getId() << "] e [" << nodeTarget->getId() << "]: " << Dist[nodeTarget->getId()] << endl;
 }
-//Por enquanto essa função é um teste
-
 //*/
 
 
