@@ -14,7 +14,7 @@ class Graph
         Graph(int order, bool directed, bool weighted_edge, bool weighted_node);
         ~Graph();
 
-        //construtor subgrafo
+        //construtor subgrafo vértice induzido
         Graph(int order, int* listIdNodes, bool directed, bool weighted_edge, bool weighted_node);
 
         //Getters
@@ -31,6 +31,7 @@ class Graph
         void insertEdge(int id, int target_id, float weight);
         bool searchNode(int id);
         Node* getNode(int id);
+        void Print_Ad_list();
 
         //methods phase1
         void topologicalSorting();
@@ -45,21 +46,20 @@ class Graph
 
         //Funções (C) e auxiliares
         float dijkstra(int idSource, int idTarget);
-        void AuxDijkstra(Node* node, Node* nodeTarget, float* Dist);
-        bool AuxDijkstraVazio(bool* NVisitado);
+        bool AuxDijkstraVazio(bool* Visitado);
         Node* AuxDijkstraSeleciona(float* Dist, bool* NVisitado,  Node* source);
 
-        Graph* agmKuskal();
-
-        Graph* agmPrim();
-
+        //Funções (D)
         float floydWarshall(int idSource, int idTarget);
 
+        //Funções (E) e auxiliares
+        void AuxPrim();
+        Graph* Prim(int idSource);
+        bool AuxPrimVazio();
 
-        
+        //Funções (F) e auxiliares
+        Graph* agmKuskal();
 
-        //minhas funções
-        void Print_Ad_list();
 
     private:
     

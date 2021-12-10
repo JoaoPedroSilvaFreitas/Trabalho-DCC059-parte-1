@@ -163,13 +163,8 @@ Node *Graph::getNode(int id)
     return node;
 }
 
-
-
 //FUNÇÕES PARTE 1
-
-
-/*Subgrafo induzido por subconjunto de vertices (J) 
-Erro quando grafo não é direcionado, a função adiciona a mesma aresta duas vezes*/
+//Subgrafo induzido por subconjunto de vertices (J) Erro quando grafo não é direcionado, a função adiciona a mesma aresta duas vezes
 Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 {
     //Criando um novo grafo
@@ -305,6 +300,11 @@ Graph* Graph::getVertexInducedDirect(int idSource)
 //Subgrafo vertice-induzido pelo fecho transitivo indireto (B)
 /*
 Onde eu olhei estava errado tenho que refazer essa função
+
+IDEIA: vou chamar a função do fecho direto varias vezes e depois verificar quais nós conseguem acessar 
+meu nó desejado mas nao acessados pelo meu nó desejado, e depois montar um grafo com os nós que atendem 
+esses requesitos
+
 */
 Graph* Graph::getVertexInducedIndirect(int idSource)
 {
@@ -351,9 +351,10 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
     return Sub_grafo;
 }
 
-//Algoritmo de Dijkstra (C)
+//Algoritmo de Dijkstra (C) e auxiliares
 float Graph::dijkstra(int idSource, int idTarget)
 {
+    //PRECISO VERIFICAR SE TEM CICLOS NEGATIVOS NO GRAFO
     Node* nodeSource = getNode(idSource);
     Node* aux;
     float* pi = new float[order];
@@ -400,6 +401,7 @@ float Graph::dijkstra(int idSource, int idTarget)
     }
 
     Node* j;
+    //CREIO QUE SE EU ADICIONAR UM || S[idTarget] == true   NO WHILE RESOLVERIA MEU PROBLEMA
     while(AuxDijkstraVazio(S))
     {
         j = AuxDijkstraSeleciona(pi,S,nodeSource);
@@ -422,7 +424,6 @@ float Graph::dijkstra(int idSource, int idTarget)
 
 }
 
-//Auxiliares da função (C) 
 bool Graph::AuxDijkstraVazio(bool* Visitado)
 {
     for(int i = 0; i < order; i++)
@@ -452,8 +453,6 @@ Node* Graph::AuxDijkstraSeleciona(float* Dist, bool* Visitado, Node* source)
 
     return aux2;
 }
-
-
 
 /*Ta mais pra um algoritmo de prim doque dijkstra
 void Graph::AuxDijkstra(Node* nodeSource, Node* nodeTarget, float* Dist)
@@ -496,8 +495,7 @@ float Graph::dijkstra(int idSource, int idTarget)
 }
 //*/
 
-
-//Caminho Minimo entre dois vertices - Floyd (D)
+//Algoritmo de Floyd (D)
 float Graph::floydWarshall(int idSource, int idTarget)
 {
     float** Dist = new float*[order];
@@ -550,9 +548,50 @@ float Graph::floydWarshall(int idSource, int idTarget)
 }
 
 //Arvore Geradora Minima de Prim (E)
-Graph* agmPrim()
+bool Graph::AuxPrimVazio()
+{
+    Node* aux;
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        if(aux->getVisitado() == false)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Graph::AuxPrim()
 {
 
+}
+
+Graph* Graph::Prim(int idSource)
+{
+    Node* aux;
+    Graph* Sub_grafo;
+    float* val = new float[order];
+    int* ant = new int[order];
+    //Setando todos nos como não visitados
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        ant[i] = NULL;
+        aux->setVisitado(false);
+        if(i == idSource)
+        {
+            val[i] = 0;
+        }else
+            {
+                val[i] = std::numeric_limits<float>::infinity();
+            }
+    }
+
+    while(AuxPrimVazio())
+    {
+
+    }
 }
 
 //Arvore Geradora Minima de Kruskal (F)
