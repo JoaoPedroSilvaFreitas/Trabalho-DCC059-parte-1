@@ -101,6 +101,7 @@ void AuxMainMenu(Graph* grafo)
         while(opt != '0')
         {
             opt = MainMenu(grafo);
+            //Subgrafo vertice induzido fecho transitivo direto
             if(opt == 'a' || opt == 'A')
             {
                 if(grafo->getDirected())
@@ -116,7 +117,7 @@ void AuxMainMenu(Graph* grafo)
                 }else
                 cout << "ERRO: Grafo nao direcionado!" << endl;
             }
-
+            //Subgrafo vertice induzido fecho transitivo indireto
             if(opt == 'b' || opt == 'B')
             {
                 if(grafo->getDirected())
@@ -132,7 +133,7 @@ void AuxMainMenu(Graph* grafo)
                 }else
                 cout << "ERRO: Grafo nao direcionado!" << endl;
             }
-
+            //Algotirmo de Dijkstra
             if(opt == 'c' || opt == 'C')
             {
                 int idSource, idTarget;
@@ -149,7 +150,24 @@ void AuxMainMenu(Graph* grafo)
                 MenorCaminho = grafo->dijkstra(idSource,idTarget);
                 cout << "Menor distancia entre " << idSource << " e " << idTarget << ": " << MenorCaminho << endl;
             }
-            
+            //Algoritmo de Floyd
+            if(opt == 'd' || opt == 'D')
+            {
+                int idSource, idTarget;
+                float MenorCaminho;
+                cout << "Menor distancia entre:" << endl;
+                do{
+                    cout << "Origem:";
+                    cin >> idSource;
+                }while(idSource > grafo->getOrder()-1 || idSource < 0);
+                do{
+                    cout << "Destino:";
+                    cin >> idTarget;
+                }while(idTarget > grafo->getOrder()-1 || idTarget < 0);
+                MenorCaminho = grafo->floydWarshall(idSource,idTarget);
+                cout << "Menor distancia entre " << idSource << " e " << idTarget << ": " << MenorCaminho << endl;
+            }
+            //Imprime Lista original
             if(opt == 'i' || opt == 'I')
             {
                 grafo->Print_Ad_list();
@@ -171,7 +189,6 @@ void AuxMainMenu(Graph* grafo)
 
                 sub_grafo = grafo->getVertexInduced(listIdNodes, OrderSubGraph);
 
-                //print pra ver se deu certo
                 //função print tem erros
                 sub_grafo->Print_Ad_list();
             }

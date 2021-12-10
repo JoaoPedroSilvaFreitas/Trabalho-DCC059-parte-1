@@ -351,6 +351,76 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
     return Sub_grafo;
 }
 
+//Algoritmo de Dijkstra (C)
+float Graph::dijkstra(int idSource, int idTarget)
+{
+    Node* nodeSource = getNode(idSource);
+    Node* aux;
+    float* pi = new float[order];
+    bool* S = new bool[order];
+
+    //Chamando função para setar vertices onde a origem não chega como nao visitados;
+    if(getDirected())
+    {
+        getVertexInducedDirect(idSource);
+    }
+    
+    //Inicializando vertices
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+
+        S[aux->getId()] = false;
+        pi[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
+
+        if(aux == nodeSource)
+        {
+            S[aux->getId()] = true;
+            pi[aux->getId()] = 0;
+        }
+
+        if(nodeSource->searchEdge(aux->getId()))
+        {
+            pi[aux->getId()] = nodeSource->getEdge(aux->getId())->getWeight();
+            S[aux->getId()] = false;
+        }
+    }
+
+    //Setando nós onde a origem nunca chega como visitados
+    if(getDirected())
+    {
+        for(int i = 0; i < order; i++)
+        {
+            aux = getNode(i);
+            if(aux->getVisitado() == false)
+            {
+                S[aux->getId()] = true;
+            }
+        }
+    }
+
+    Node* j;
+    while(AuxDijkstraVazio(S))
+    {
+        j = AuxDijkstraSeleciona(pi,S,nodeSource);
+        S[j->getId()] = true;
+        for(int i = 0; i < order; i++)
+        {
+            aux = getNode(i);
+            if(S[aux->getId()] == false && j->searchEdge(aux->getId()))
+            {
+                if(pi[aux->getId()] > pi[j->getId()] + j->getEdge(aux->getId())->getWeight())
+                {
+                    pi[aux->getId()] = pi[j->getId()] + j->getEdge(aux->getId())->getWeight();
+                    //PRECISO ADICIONAR EXTENSAO PARA VALORES NEGATIVOS
+                }
+            }
+        }
+    }
+
+    return pi[idTarget];
+
+}
 
 //Auxiliares da função (C) 
 bool Graph::AuxDijkstraVazio(bool* Visitado)
@@ -383,69 +453,6 @@ Node* Graph::AuxDijkstraSeleciona(float* Dist, bool* Visitado, Node* source)
     return aux2;
 }
 
-//Algoritmo de Dijkstra (C)
-float Graph::dijkstra(int idSource, int idTarget)
-{
-    Node* nodeSource = getNode(idSource);
-    Node* aux;
-    float* pi = new float[order];
-    bool* S = new bool[order];
-
-    //Chamando função para setar vertices onde a origem não chega como nao visitados;
-    getVertexInducedDirect(idSource);
-    
-    //Inicializando vertices
-    for(int i = 0; i < order; i++)
-    {
-        aux = getNode(i);
-
-        S[aux->getId()] = false;
-        pi[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
-
-        if(aux == nodeSource)
-        {
-            S[aux->getId()] = true;
-            pi[aux->getId()] = 0;
-        }
-
-        if(nodeSource->searchEdge(aux->getId()))
-        {
-            pi[aux->getId()] = nodeSource->getEdge(aux->getId())->getWeight();
-            S[aux->getId()] = false;
-        }
-    }
-
-    //Setando nós onde a origem nunca chega como visitados
-    for(int i = 0; i < order; i++)
-    {
-        aux = getNode(i);
-        if(aux->getVisitado() == false)
-        {
-            S[aux->getId()] = true;
-        }
-    }
-
-    Node* j;
-    while(AuxDijkstraVazio(S))
-    {
-        j = AuxDijkstraSeleciona(pi,S,nodeSource);
-        S[j->getId()] = true;
-        for(int i = 0; i < order; i++)
-        {
-            aux = getNode(i);
-            if(S[aux->getId()] == false && j->searchEdge(aux->getId()))
-            {
-                if(pi[aux->getId()] > pi[j->getId()] + j->getEdge(aux->getId())->getWeight())
-                {
-                    pi[aux->getId()] = pi[j->getId()] + j->getEdge(aux->getId())->getWeight();
-                }
-            }
-        }
-    }
-
-    return pi[idTarget];
-
-}
 
 
 /*Ta mais pra um algoritmo de prim doque dijkstra
@@ -491,9 +498,55 @@ float Graph::dijkstra(int idSource, int idTarget)
 
 
 //Caminho Minimo entre dois vertices - Floyd (D)
-float Graph::floydMarshall(int idSource, int idTarget)
+float Graph::floydWarshall(int idSource, int idTarget)
 {
+    float** Dist = new float*[order];
+    for (int i = 0; i < order; i++)
+    {
+        Dist[i] = new float[order];
+    }
     
+    Node* aux;
+    Node* aux2;
+    //INICIANDO MATRIZ
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        for(int j = 0; j < order; j++)
+        {
+            aux2 = getNode(j);
+            if(aux->searchEdge(aux2->getId()))
+            {
+                Dist[i][j] = aux->getEdge(aux2->getId())->getWeight();
+            }else
+                {
+                    Dist[i][j] = std::numeric_limits<float>::infinity();
+                }
+
+            if(i == j)
+            {
+                Dist[i][j] = 0;
+            } 
+        }
+    }
+
+
+    for(int k = 0; k < order; k++)
+    {
+        aux = getNode(k);
+        for(int i = 0; i < order; i++)
+        {
+            for(int j = 0; j < order; j++)
+            {
+                if(Dist[i][j] > Dist[i][k] + Dist[k][j])
+                {
+                    Dist[i][j] =  Dist[i][k] + Dist[k][j];
+                }
+            }
+        }
+    }
+
+    return Dist[idSource][idTarget];
 }
 
 //Arvore Geradora Minima de Prim (E)

@@ -53,7 +53,7 @@ class Graph
 
         Graph* agmPrim();
 
-        float floydMarshall(int idSource, int idTarget);
+        float floydWarshall(int idSource, int idTarget);
 
 
         
