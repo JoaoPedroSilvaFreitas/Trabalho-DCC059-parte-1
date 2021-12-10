@@ -46,7 +46,9 @@ class Graph
         //Funções (C) e auxiliares
         float dijkstra(int idSource, int idTarget);
         void AuxDijkstra(Node* node, Node* nodeTarget, float* Dist);
-        
+        bool AuxDijkstraVazio(bool* NVisitado);
+        Node* AuxDijkstraSeleciona(float* Dist, bool* NVisitado,  Node* source);
+
         Graph* agmKuskal();
 
         Graph* agmPrim();

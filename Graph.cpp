@@ -352,35 +352,122 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
 }
 
 
+//sem recursividade
+//*
+bool Graph::AuxDijkstraVazio(bool* Visitado)
+{
+    for(int i = 0; i < order; i++)
+    {
+        if(Visitado[i] == false)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+Node* Graph::AuxDijkstraSeleciona(float* Dist, bool* Visitado, Node* source)
+{
+    Node* aux;
+    Node* aux2;
+    float min = std::numeric_limits<float>::infinity();
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        if(Visitado[aux->getId()] == false)
+        {
+            if(Dist[aux->getId()] < min)
+            {
+                min = Dist[aux->getId()];
+                aux2 = aux;
+                
+            }
+        }
+    }
+    
+    cout << "[" << aux2->getId() << "]: "<< min << endl;
+
+    return aux2;
+}
+
+float Graph::dijkstra(int idSource, int idTarget)
+{
+    Node* nodeSource = getNode(idSource);
+    Node* aux;
+    float* pi = new float[order];
+    bool* S = new bool[order];
+
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        if(aux == nodeSource)
+        {
+            S[aux->getId()] = true;
+            pi[aux->getId()] = 0;
+        }else
+            {
+                S[aux->getId()] = false;
+                pi[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
+                if(nodeSource->searchEdge(aux->getId()))
+                {
+                    pi[aux->getId()] = nodeSource->getEdge(aux->getId())->getWeight();
+                }
+            }
+    }
+
+    Node* j;
+    while(AuxDijkstraVazio(S))
+    {
+        j = AuxDijkstraSeleciona(pi,S,nodeSource);
+        S[j->getId()] = true;
+        for(int i = 0; i < order; i++)
+        {
+            aux = getNode(i);
+            if(S[aux->getId()] == false && j->searchEdge(aux->getId()))
+            {
+                if(pi[aux->getId()] > pi[j->getId()] + j->getEdge(aux->getId())->getWeight())
+                {
+                    pi[aux->getId()] = pi[j->getId()] + j->getEdge(aux->getId())->getWeight();
+                }
+            }
+        }
+    }
+
+    return pi[idTarget];
+
+}
+//*/
+
+
+
+
+/*Ta mais pra um algoritmo de prim doque dijkstra
+
 //Auxiliar da função (C) 
 void Graph::AuxDijkstra(Node* nodeSource, Node* nodeTarget, float* Dist)
 {
-    nodeSource->setVisitado(true);
     for(Node* aux = first_node; aux != nullptr; aux = aux->getNextNode())
     {
         if((aux->getVisitado() == false) && (nodeSource->searchEdge(aux->getId())))
         {
-            
-            Dist[aux->getId()] = Dist[nodeSource->getId()] + nodeSource->getEdge(aux->getId())->getWeight();
-            cout << "[" << aux->getId() << "]" << Dist[aux->getId()] << endl;
-            AuxDijkstra(aux,nodeTarget,Dist);
-            aux->setVisitado(false);
-            /*if(aux == nodeTarget)
+            if(Dist[aux->getId()] > Dist[nodeSource->getId()] + nodeSource->getEdge(aux->getId())->getWeight())
             {
-                nodeTarget->setVisitado(false);
-            }*/
+                Dist[aux->getId()] = Dist[nodeSource->getId()] + nodeSource->getEdge(aux->getId())->getWeight();
+            }
+
+            AuxDijkstra(aux,nodeTarget,Dist);
         }
     }
 }
 
-//Caminho Minimo entre dois vertices - Dijkstra (C)
+//Algoritmo de Dijkstra (C)
 float Graph::dijkstra(int idSource, int idTarget)
 {
     Node* nodeSource = getNode(idSource);
     Node* nodeTarget = getNode(idTarget);
     Node* aux;
     float* Dist = new float[order];
-
+    
     //Setando todos os nós como não visitados
     for(int i = 0; i < order; i++)
     {
@@ -388,18 +475,18 @@ float Graph::dijkstra(int idSource, int idTarget)
         aux->setVisitado(false);
         if(aux == nodeSource)
         {
+            aux->setVisitado(true);
             Dist[aux->getId()] = 0;
         }else
         Dist[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
     }
     AuxDijkstra(nodeSource,nodeTarget,Dist);
 
-    for(int i = 0; i < order; i++)
-    {
-        cout << "[" << i << "]:" << Dist[i] << "    ";
-    }
-    cout << endl;
+    cout << "Menor distancia entre [" << nodeSource->getId() << "] e [" << nodeTarget->getId() << "]: " << Dist[nodeTarget->getId()] << endl;
 }
+//Por enquanto essa função é um teste
+
+//*/
 
 
 //Caminho Minimo entre dois vertices - Floyd (D)

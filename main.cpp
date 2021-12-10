@@ -132,11 +132,14 @@ void AuxMainMenu(Graph* grafo)
             if(opt == 'c' || opt == 'C')
             {
                 int idSource, idTarget;
-                cout << "Menor distancia de:";
+                float MenorCaminho;
+                cout << "Menor distancia entre:" << endl;
+                cout << "Origem:";
                 cin >> idSource;
-                cout << "Ate:";
+                cout << "Destino:";
                 cin >> idTarget;
-                grafo->dijkstra(idSource,idTarget);
+                MenorCaminho = grafo->dijkstra(idSource,idTarget);
+                cout << "Menor distancia entre " << idSource << " e " << idTarget << ": " << MenorCaminho << endl;
             }
             
             if(opt == 'i' || opt == 'I')
