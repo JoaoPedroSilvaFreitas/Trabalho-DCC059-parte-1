@@ -54,11 +54,14 @@ class Graph
 
         //Funções (E) e auxiliares
         void AuxPrim();
-        Graph* Prim(int idSource);
+        Graph* Prim(int* ListIdNodes, int SubOrder);
         bool AuxPrimVazio();
 
         //Funções (F) e auxiliares
-        Graph* agmKuskal();
+        Graph* Kruskal(int* ListIdNodes, int SubOrder);
+        void KruskalVerificaSubArv();
+        void KruskalUneSubArv();
+
 
 
     private:

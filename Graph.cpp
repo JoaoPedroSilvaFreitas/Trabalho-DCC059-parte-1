@@ -164,73 +164,159 @@ Node *Graph::getNode(int id)
 }
 
 //FUNÇÕES PARTE 1
-//Subgrafo induzido por subconjunto de vertices (J) Erro quando grafo não é direcionado, a função adiciona a mesma aresta duas vezes
+//Subgrafo induzido por subconjunto de vertices (J)
 Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
 {
     //Criando um novo grafo
     Graph* sub_grafo = new Graph(OrderSubGraph, listIdNodes, getDirected(), getWeightedEdge(), getWeightedNode());
     Node* node;
     Node* aux;
-    if(!sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode())//Caso o grafo não tenha peso nos nós e arestas
+    //GRAFO DIRECIONADO
+    if(sub_grafo->getDirected() == true)
     {
-        for(int i = 0; i < sub_grafo->getOrder(); i++)
+        if(!sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode())//Caso o grafo não tenha peso nos nós e arestas
         {
-            //aponta para o nó do grafo antigo que possui o mesmo id no grafo novo
-            node = getNode(listIdNodes[i]);
-            for(int j = 0; j < sub_grafo->getOrder(); j++)
+            for(int i = 0; i < sub_grafo->getOrder(); i++)
             {
-                aux = getNode(listIdNodes[j]);
-                if(node->hasEdgeBetween(listIdNodes[j]))
+                //aponta para o nó do grafo antigo que possui o mesmo id no grafo novo
+                node = getNode(listIdNodes[i]);
+                for(int j = 0; j < sub_grafo->getOrder(); j++)
                 {
-                    sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
+                    aux = getNode(listIdNodes[j]);
+                    if(node->hasEdgeBetween(listIdNodes[j]))
+                    {
+                        sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
+                    }
+                }
+            }
+        }
+        else if(sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode() )//Caso o grafo tenha peso nas arestas
+        {
+            Edge* edge;
+            for(int i = 0; i < sub_grafo->getOrder(); i++)
+            {
+                node = getNode(listIdNodes[i]);
+                for(int j = 0; j < sub_grafo->getOrder(); j++)
+                {
+                    if(node->hasEdgeBetween(listIdNodes[j]))
+                    {
+                        edge = node->getEdge(listIdNodes[j]);
+                        sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],edge->getWeight());
+                    }
+                }
+            }
+        }
+        else if(sub_grafo->getWeightedNode() && !sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós
+        {
+            for(int i = 0; i < sub_grafo->getOrder(); i++)
+            {
+                node = getNode(listIdNodes[i]);
+                for(int j = 0; j < sub_grafo->getOrder(); j++)
+                {
+                    if(node->hasEdgeBetween(listIdNodes[j]))
+                    {
+                        node->setWeight(getNode(listIdNodes[i])->getWeight());
+                        sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
+                    }
+                }
+            }
+        }
+        else if(sub_grafo->getWeightedNode() && sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós e arestas
+        {
+            Edge* edge;
+            for(int i = 0; i < sub_grafo->getOrder(); i++)
+            {
+                node = sub_grafo->getNode(listIdNodes[i]);
+                for(int j = 0; j < sub_grafo->getOrder(); j++)
+                {
+                    if(node->hasEdgeBetween(listIdNodes[j]))
+                    {
+                        edge = node->getEdge(listIdNodes[j]);
+                        node->setWeight(getNode(listIdNodes[i])->getWeight());
+                        sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],edge->getWeight());
+                    }
                 }
             }
         }
     }
-    else if(sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode() )//Caso o grafo tenha peso nas arestas
+    
+    //GRAFO NAO DIRECIONADO
+    if(sub_grafo->getDirected() == false)
     {
-        Edge* edge;
-        for(int i = 0; i < sub_grafo->getOrder(); i++)
+        if(!sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode())//Caso o grafo não tenha peso nos nós e arestas
         {
-            node = getNode(listIdNodes[i]);
-            for(int j = 0; j < sub_grafo->getOrder(); j++)
+            for(int i = 0; i < sub_grafo->getOrder(); i++)
             {
-                if(node->hasEdgeBetween(listIdNodes[j]))
+                node = getNode(listIdNodes[i]);
+                for(int j = 0; j < sub_grafo->getOrder(); j++)
                 {
-                    edge = node->getEdge(listIdNodes[j]);
-                    sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],edge->getWeight());
+                    aux = getNode(listIdNodes[j]);
+                    if(node->searchEdge(listIdNodes[j]))
+                    {
+                        if(sub_grafo->getNode(listIdNodes[j])->searchEdge(node->getId()) ==  false)
+                        {
+                            sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
+                        }
+                    }
                 }
             }
         }
-    }
-    else if(sub_grafo->getWeightedNode() && !sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós
-    {
-        for(int i = 0; i < sub_grafo->getOrder(); i++)
+        else if(sub_grafo->getWeightedEdge() && !sub_grafo->getWeightedNode() )//Caso o grafo tenha peso nas arestas
         {
-            node = getNode(listIdNodes[i]);
-            for(int j = 0; j < sub_grafo->getOrder(); j++)
+            Edge* edge;
+            for(int i = 0; i < sub_grafo->getOrder(); i++)
             {
-                if(node->hasEdgeBetween(listIdNodes[j]))
+                node = getNode(listIdNodes[i]);
+                for(int j = 0; j < sub_grafo->getOrder(); j++)
                 {
-                    node->setWeight(getNode(listIdNodes[i])->getWeight());
-                    sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
+                    if(node->searchEdge(listIdNodes[j]))
+                    {
+                        if(sub_grafo->getNode(listIdNodes[j])->searchEdge(node->getId()) ==  false)
+                        {
+                            edge = node->getEdge(listIdNodes[j]);
+                            sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],edge->getWeight());
+                        }
+                        
+                    }
                 }
             }
         }
-    }
-    else if(sub_grafo->getWeightedNode() && sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós e arestas
-    {
-        Edge* edge;
-        for(int i = 0; i < sub_grafo->getOrder(); i++)
+        else if(sub_grafo->getWeightedNode() && !sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós
         {
-            node = sub_grafo->getNode(listIdNodes[i]);
-            for(int j = 0; j < sub_grafo->getOrder(); j++)
+            for(int i = 0; i < sub_grafo->getOrder(); i++)
             {
-                if(node->hasEdgeBetween(listIdNodes[j]))
+                node = getNode(listIdNodes[i]);
+                for(int j = 0; j < sub_grafo->getOrder(); j++)
                 {
-                    edge = node->getEdge(listIdNodes[j]);
-                    node->setWeight(getNode(listIdNodes[i])->getWeight());
-                    sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],edge->getWeight());
+                    if(node->searchEdge(listIdNodes[j]))
+                    {
+                        if(sub_grafo->getNode(listIdNodes[j])->searchEdge(node->getId()) ==  false)
+                        {
+                            node->setWeight(getNode(listIdNodes[i])->getWeight());
+                            sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
+                        }
+                    }
+                }
+            }
+        }
+        else if(sub_grafo->getWeightedNode() && sub_grafo->getWeightedEdge())//Caso o grafo tenha peso nos nós e arestas
+        {
+
+            Edge* edge;
+            for(int i = 0; i < sub_grafo->getOrder(); i++)
+            {
+                node = sub_grafo->getNode(listIdNodes[i]);
+                for(int j = 0; j < sub_grafo->getOrder(); j++)
+                {
+                    if(node->searchEdge(listIdNodes[j]))
+                    {
+                        if(sub_grafo->getNode(listIdNodes[j])->searchEdge(node->getId()) ==  false)
+                        {
+                            edge = node->getEdge(listIdNodes[j]);
+                            node->setWeight(getNode(listIdNodes[i])->getWeight());
+                            sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],edge->getWeight());
+                        }
+                    }
                 }
             }
         }
@@ -550,16 +636,7 @@ float Graph::floydWarshall(int idSource, int idTarget)
 //Arvore Geradora Minima de Prim (E)
 bool Graph::AuxPrimVazio()
 {
-    Node* aux;
-    for(int i = 0; i < order; i++)
-    {
-        aux = getNode(i);
-        if(aux->getVisitado() == false)
-        {
-            return true;
-        }
-    }
-    return false;
+
 }
 
 void Graph::AuxPrim()
@@ -567,28 +644,25 @@ void Graph::AuxPrim()
 
 }
 
-Graph* Graph::Prim(int idSource)
+Graph* Graph::Prim(int* ListIdNodes, int SubOrder)
 {
     Node* aux;
     Graph* Sub_grafo;
-    float* val = new float[order];
-    int* ant = new int[order];
+    bool* S = new bool[SubOrder];
+    float* pi = new float[SubOrder];
+    int* ant = new int[SubOrder];
 
-
-
-
-    //Setando todos nos como não visitados
-    for(int i = 0; i < order; i++)
+    for(int i = 0; i < SubOrder; i++)
     {
-        aux = getNode(i);
-        ant[i] = NULL;
-        aux->setVisitado(false);
-        if(i == idSource)
+        aux = getNode(ListIdNodes[i]);
+        if(i == 0)
         {
-            val[i] = 0;
+            pi[i] = 0;
+            S[i] = true;
         }else
             {
-                val[i] = std::numeric_limits<float>::infinity();
+                pi[i] = std::numeric_limits<float>::infinity();
+                S[i] = false;
             }
     }
 
@@ -599,10 +673,38 @@ Graph* Graph::Prim(int idSource)
 }
 
 //Arvore Geradora Minima de Kruskal (F)
-Graph* agmKuskal()
+void Graph::KruskalVerificaSubArv()
 {
 
 }
+void Graph::KruskalUneSubArv()
+{
+    
+}
+
+Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder)
+{
+    int cont = 0;
+    Node* aux;
+    Graph* AuxGrafo = getVertexInduced(ListIdNodes,SubOrder);
+
+    //Criar Lista L com pesos das arestas em ordem crescente
+    //Criar (order) subárvores contendo cada uma um nó isolado
+    /*
+    while(cont < order-1 &&  Lista L != Vazio)
+    {
+        //Pego aresta (u,v) de menor peso na lista L
+        //Lista L = Lista L - aresta(u,v)
+        if(Aresta (u,v) nao estão na mesma subarvore)
+        {
+            //F = F + (u,v) Unir as subarvores que contem u e v
+            cont++;
+        }
+    }
+    */
+}
+
+
 
 void Graph::breadthFirstSearch(ofstream &output_file)
 {
