@@ -239,11 +239,7 @@ void AuxMainMenu(Graph* grafo)
             //Ordenação topológica
             if(opt == 'h' || opt == 'H')
             {
-                if(grafo->getDirected())
-                {
-                    grafo->TopologicalSorting();
-                }else
-                cout << "ERRO: Grafo nao direcionado!" << endl;
+                grafo->TopologicalSorting();
             }
 
             //Imprime Lista de adjacência original

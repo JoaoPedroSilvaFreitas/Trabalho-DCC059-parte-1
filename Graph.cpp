@@ -385,12 +385,6 @@ Graph* Graph::getVertexInducedDirect(int idSource)
 }
 
 //Subgrafo vertice-induzido pelo fecho transitivo indireto (B)
-/*
-IDEIA: vou chamar a função do fecho direto varias vezes e depois verificar quais nós conseguem acessar 
-meu nó desejado mas nao acessados pelo meu nó desejado, e depois montar um grafo com os nós que atendem 
-esses requesitos
-
-*/
 Graph* Graph::getVertexInducedIndirect(int idSource)
 {
     Graph* Sub_grafo;
@@ -427,42 +421,6 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
     Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
     return Sub_grafo;
 
-/*
-    //Setando todos nos como não visitados
-    for(int i = 0; i < order; i++)
-    {
-        aux = getNode(i);
-        aux->setVisitado(false);
-    }
-    auxVertexInduced(node);
-
-    //for para pegar quantos nós foram visitados
-    for(int i = 0; i < order; i++)
-    {
-        node = getNode(i);
-        if(node->getVisitado() == false)
-        {
-            SubOrder++;
-        }
-    }
-    listIdNodes = new int[SubOrder];
-
-    //for para preencher a lista de inteiro com o id dos nós visitados
-    int j = 0;
-    for(int i = 0; i < order; i++)
-    {
-        node = getNode(i);
-        if(node->getVisitado() == false)
-        {
-            listIdNodes[j] = node->getId();
-            j++;
-        }
-    }
-
-    //criando subgrafo vertice induzido com os nós visitados
-    Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
-    return Sub_grafo;
-*/
 }
 
 //Algoritmo de Dijkstra (C) e auxiliares
@@ -717,10 +675,9 @@ void Graph::TopologicalSorting()
     int* ordTop = new int[order];
     int N = order-1;
 
-    // Creio que essa função depende da vertice induzido indireto;
-    if(VerificaCiclos())
+    if(VerificaCiclos() && getDirected())
     {
-        cout << "Grafo ciclico!" << endl;
+        cout << "Grafo ciclico direcionado!" << endl;
         return;
     }
 
@@ -739,6 +696,7 @@ void Graph::TopologicalSorting()
         }
     }
 
+    cout << "Ordenacao topologica:" << endl;
     for(int i = 0; i < order; i++)
     {
         cout << ordTop[i] << "   ";
@@ -751,14 +709,20 @@ void Graph::TopologicalSorting()
 bool Graph::AuxVerificaCiclos(int i,bool* V)
 {
     V[i] = true;
+    Graph* NosPais;
+    NosPais = getVertexInducedIndirect(i);
     for(int j = 0; j < order; j++)
     {
+        
         if(V[j] == false && getNode(i)->searchEdge(j))
         {
+            if(NosPais->searchNode(j))
+            {
+                return true; //O codigo simplesmente ignora esse return;
+            }
             cout << j << endl;
             AuxVerificaCiclos(j,V);
         }
-        
     }
     return false;
 }
