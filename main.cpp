@@ -134,6 +134,7 @@ void AuxMainMenu(Graph* grafo)
                 }else
                 cout << "ERRO: Grafo nao direcionado!" << endl;
             }
+
             //Algotirmo de Dijkstra
             if(opt == 'c' || opt == 'C')
             {
@@ -224,7 +225,28 @@ void AuxMainMenu(Graph* grafo)
                 grafo->Kruskal(listIdNodes,SubOrder);
             }
 
-            //Imprime Lista original
+            //Caminhamento em largura
+            if(opt == 'g' || opt == 'G')
+            {
+                Graph* ArvLargura;
+                int idSource;
+                do{
+                    cout << "Vertice:";
+                    cin >> idSource;
+                }while(idSource > grafo->getOrder()-1 || idSource < 0);
+            }
+
+            //Ordenação topológica
+            if(opt == 'h' || opt == 'H')
+            {
+                if(grafo->getDirected())
+                {
+                    grafo->TopologicalSorting();
+                }else
+                cout << "ERRO: Grafo nao direcionado!" << endl;
+            }
+
+            //Imprime Lista de adjacência original
             if(opt == 'i' || opt == 'I')
             {
                 grafo->Print_Ad_list();
@@ -245,8 +267,6 @@ void AuxMainMenu(Graph* grafo)
                 }
 
                 sub_grafo = grafo->getVertexInduced(listIdNodes, OrderSubGraph);
-
-                //função print tem erros
                 sub_grafo->Print_Ad_list();
             }
         }

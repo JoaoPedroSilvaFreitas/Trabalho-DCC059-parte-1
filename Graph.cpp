@@ -321,6 +321,7 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
             }
         }
     }
+    
     return sub_grafo;
 }
 
@@ -540,47 +541,6 @@ Node* Graph::AuxDijkstraSeleciona(float* Dist, bool* Visitado, Node* source)
     return aux2;
 }
 
-/*Ta mais pra um algoritmo de prim doque dijkstra
-void Graph::AuxDijkstra(Node* nodeSource, Node* nodeTarget, float* Dist)
-{
-    for(Node* aux = first_node; aux != nullptr; aux = aux->getNextNode())
-    {
-        if((aux->getVisitado() == false) && (nodeSource->searchEdge(aux->getId())))
-        {
-            if(Dist[aux->getId()] > Dist[nodeSource->getId()] + nodeSource->getEdge(aux->getId())->getWeight())
-            {
-                Dist[aux->getId()] = Dist[nodeSource->getId()] + nodeSource->getEdge(aux->getId())->getWeight();
-            }
-
-            AuxDijkstra(aux,nodeTarget,Dist);
-        }
-    }
-}
-float Graph::dijkstra(int idSource, int idTarget)
-{
-    Node* nodeSource = getNode(idSource);
-    Node* nodeTarget = getNode(idTarget);
-    Node* aux;
-    float* Dist = new float[order];
-    
-    //Setando todos os nós como não visitados
-    for(int i = 0; i < order; i++)
-    {
-        aux = getNode(i);
-        aux->setVisitado(false);
-        if(aux == nodeSource)
-        {
-            aux->setVisitado(true);
-            Dist[aux->getId()] = 0;
-        }else
-        Dist[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
-    }
-    AuxDijkstra(nodeSource,nodeTarget,Dist);
-
-    cout << "Menor distancia entre [" << nodeSource->getId() << "] e [" << nodeTarget->getId() << "]: " << Dist[nodeTarget->getId()] << endl;
-}
-//*/
-
 //Algoritmo de Floyd (D)
 float Graph::floydWarshall(int idSource, int idTarget)
 {
@@ -677,6 +637,7 @@ void Graph::KruskalVerificaSubArv()
 {
 
 }
+
 void Graph::KruskalUneSubArv()
 {
     
@@ -687,7 +648,7 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder)
     int cont = 0;
     Node* aux;
     Graph* AuxGrafo = getVertexInduced(ListIdNodes,SubOrder);
-
+    
     //Criar Lista L com pesos das arestas em ordem crescente
     //Criar (order) subárvores contendo cada uma um nó isolado
     /*
@@ -704,21 +665,48 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder)
     */
 }
 
-
-
-void Graph::breadthFirstSearch(ofstream &output_file)
+//Ordenação topológica (H)
+void Graph::AuxTopologicalSorting(int i, bool* V, int* Visitado)
 {
-    
+    Node* aux;
+    Node* node = getNode(i);
+    if(V[i] == true)
+    {
+        cout << "grafo ciclico" << endl;
+    }
+    cout << i << "  ";
+    V[i] = true;
+    for(int j = 0; j < order; j++)
+    {
+        aux = getNode(j);
+        if(V[j] == false && node->searchEdge(aux->getId()))
+        {
+            AuxTopologicalSorting(j,V,Visitado);
+        }
+    }
+    //cout << i << "  ";
 }
 
-void breadthFirstSearch(ofstream& output_file)
+void Graph::TopologicalSorting()
 {
+    bool* V = new bool[order];
+    int* ordTop = new int[order];
+    int* Visitado = new int[order];
+    for(int i = 0; i < order; i++)
+    {
+        V[i] = false;
+        ordTop[i] = 0;
+        Visitado[i] = NULL;
+    }
 
-}
-
-void topologicalSorting()
-{
-
+    for(int i = 0; i < order; i++)
+    {
+        if(V[i] == false)
+        {
+            AuxTopologicalSorting(i,V,Visitado);
+        }
+    }
+    cout << endl;
 }
 
 //Imprime a lista de adjacencia

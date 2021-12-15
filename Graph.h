@@ -10,7 +10,7 @@ using namespace std;
 class Graph
 {
     public:
-        // Construtor & Destrutor
+        // Construtor e Destrutor
         Graph(int order, bool directed, bool weighted_edge, bool weighted_node);
         ~Graph();
 
@@ -32,11 +32,6 @@ class Graph
         bool searchNode(int id);
         Node* getNode(int id);
         void Print_Ad_list();
-
-        //methods phase1
-        void topologicalSorting();
-
-        void breadthFirstSearch(ofstream& output_file);
 
         //Funções (A) (B) e auxiliares
         Graph* getVertexInduced(int* listIdNodes, int OrderSubGraph);
@@ -62,7 +57,12 @@ class Graph
         void KruskalVerificaSubArv();
         void KruskalUneSubArv();
 
+        //Funções (G) e auxiliares
+        void breadthFirstSearch(ofstream& output_file);
 
+        //Funções (H) e auxiliares
+        void TopologicalSorting();
+        void AuxTopologicalSorting(int i, bool* V, int* Visitado);
 
     private:
     

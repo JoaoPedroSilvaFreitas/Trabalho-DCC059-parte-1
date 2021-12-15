@@ -7,7 +7,7 @@ using namespace std;
 class Node
 {
     public:
-        // Constructor & Destructor
+        // Construtor e Destrutor
         Node(int id);
         ~Node();
 
@@ -39,9 +39,6 @@ class Node
         void incrementInDegree();
         void decrementInDegree();
         Edge* hasEdgeBetween(int target_id);
-
-
-        //Minhas funções
         void Print_Edges();
         int getNumberEdges();
 

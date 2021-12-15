@@ -6,7 +6,7 @@ using namespace std;
 class Edge
 {
     public:
-        // Constructor & Destructor
+        // Constructor e Destructor
         Edge(int target_id);
         ~Edge();
 
