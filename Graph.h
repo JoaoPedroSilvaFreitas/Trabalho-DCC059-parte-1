@@ -32,6 +32,8 @@ class Graph
         bool searchNode(int id);
         Node* getNode(int id);
         void Print_Ad_list();
+        bool VerificaCiclos();
+        bool  AuxVerificaCiclos(int i,bool* V);
 
         //Funções (A) (B) e auxiliares
         Graph* getVertexInduced(int* listIdNodes, int OrderSubGraph);
@@ -62,7 +64,7 @@ class Graph
 
         //Funções (H) e auxiliares
         void TopologicalSorting();
-        void AuxTopologicalSorting(int i, bool* V, int* Visitado);
+        int AuxTopologicalSorting(int i, bool* V, int* ordTop, int N);
 
     private:
     

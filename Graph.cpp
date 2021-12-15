@@ -386,8 +386,6 @@ Graph* Graph::getVertexInducedDirect(int idSource)
 
 //Subgrafo vertice-induzido pelo fecho transitivo indireto (B)
 /*
-Onde eu olhei estava errado tenho que refazer essa função
-
 IDEIA: vou chamar a função do fecho direto varias vezes e depois verificar quais nós conseguem acessar 
 meu nó desejado mas nao acessados pelo meu nó desejado, e depois montar um grafo com os nós que atendem 
 esses requesitos
@@ -395,13 +393,41 @@ esses requesitos
 */
 Graph* Graph::getVertexInducedIndirect(int idSource)
 {
-    Node* node = getNode(idSource);
-    Node* aux;
     Graph* Sub_grafo;
 
     int* listIdNodes;
+    int* auxListIdNodes = new int[order];
     int SubOrder = 0;
 
+    for(int i = 0; i < order; i++)
+    {
+        Sub_grafo = getVertexInducedDirect(i);
+        if(Sub_grafo->searchNode(idSource))
+        {
+            auxListIdNodes[i] = i;
+            SubOrder++;
+        }
+        else
+            {
+                auxListIdNodes[i] = -1;
+            }
+    }
+    listIdNodes = new int[SubOrder];
+    int j = 0;
+    for(int i = 0; i < order; i++)
+    {
+        if(auxListIdNodes[i] != -1)
+        {
+            listIdNodes[j] = auxListIdNodes[i];
+            j++;
+        }
+    }
+
+
+    Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
+    return Sub_grafo;
+
+/*
     //Setando todos nos como não visitados
     for(int i = 0; i < order; i++)
     {
@@ -436,6 +462,7 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
     //criando subgrafo vertice induzido com os nós visitados
     Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
     return Sub_grafo;
+*/
 }
 
 //Algoritmo de Dijkstra (C) e auxiliares
@@ -666,48 +693,93 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder)
 }
 
 //Ordenação topológica (H)
-void Graph::AuxTopologicalSorting(int i, bool* V, int* Visitado)
+int Graph::AuxTopologicalSorting(int i, bool* V, int* ordTop, int N)
 {
     Node* aux;
     Node* node = getNode(i);
-    if(V[i] == true)
-    {
-        cout << "grafo ciclico" << endl;
-    }
-    cout << i << "  ";
     V[i] = true;
+    node->setVisitado(true);
     for(int j = 0; j < order; j++)
     {
         aux = getNode(j);
         if(V[j] == false && node->searchEdge(aux->getId()))
         {
-            AuxTopologicalSorting(j,V,Visitado);
+            N = AuxTopologicalSorting(j,V,ordTop,N);
         }
+        ordTop[N] = i;
     }
-    //cout << i << "  ";
+    return N-1;
 }
 
 void Graph::TopologicalSorting()
 {
     bool* V = new bool[order];
     int* ordTop = new int[order];
-    int* Visitado = new int[order];
+    int N = order-1;
+
+    // Creio que essa função depende da vertice induzido indireto;
+    if(VerificaCiclos())
+    {
+        cout << "Grafo ciclico!" << endl;
+        return;
+    }
+
     for(int i = 0; i < order; i++)
     {
+        getNode(i)->setVisitado(false);
         V[i] = false;
         ordTop[i] = 0;
-        Visitado[i] = NULL;
     }
 
     for(int i = 0; i < order; i++)
     {
         if(V[i] == false)
         {
-            AuxTopologicalSorting(i,V,Visitado);
+           N = AuxTopologicalSorting(i,V,ordTop,N);
         }
     }
+
+    for(int i = 0; i < order; i++)
+    {
+        cout << ordTop[i] << "   ";
+    }
     cout << endl;
+
 }
+
+
+bool Graph::AuxVerificaCiclos(int i,bool* V)
+{
+    V[i] = true;
+    for(int j = 0; j < order; j++)
+    {
+        if(V[j] == false && getNode(i)->searchEdge(j))
+        {
+            cout << j << endl;
+            AuxVerificaCiclos(j,V);
+        }
+        
+    }
+    return false;
+}
+
+bool Graph::VerificaCiclos()
+{
+    bool* V = new bool[order];
+    bool* backEdge = new bool[order];
+    for(int i = 0; i < order; i++)
+    {
+        V[i] = false;
+        backEdge[i] = false;
+    }
+
+    if(AuxVerificaCiclos(0,V))
+    {
+        return true;
+    }
+    return false;
+}
+
 
 //Imprime a lista de adjacencia
 void Graph::Print_Ad_list()
