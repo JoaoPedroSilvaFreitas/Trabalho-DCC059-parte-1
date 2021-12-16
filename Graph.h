@@ -32,41 +32,42 @@ class Graph
         bool searchNode(int id);
         Node* getNode(int id);
         void Print_Ad_list();
-        bool VerificaCiclos();
-        bool AuxVerificaCiclos(int i,bool* V);
-        bool VerificaCiclosNegativos();
-        bool AuxVerificaCiclosNegativos(int i,bool* V);
+        bool VerificaCiclos(ofstream& output_file);
+        bool AuxVerificaCiclos(int i,bool* V, ofstream& output_file);
+        bool VerificaCiclosNegativos(ofstream& output_file);
+        bool AuxVerificaCiclosNegativos(int i,bool* V, ofstream& output_file);
 
         //Funções (A) (B) e auxiliares
         Graph* getVertexInduced(int* listIdNodes, int OrderSubGraph);
-        Graph* getVertexInducedDirect(int idSource);
-        Graph* getVertexInducedIndirect(int idSource);
+        Graph* getVertexInducedDirect(int idSource, ofstream& output_file);
+        Graph* getVertexInducedIndirect(int idSource, ofstream& output_file);
         void auxVertexInduced(Node* node);
 
         //Funções (C) e auxiliares
-        float dijkstra(int idSource, int idTarget);
+        float dijkstra(int idSource, int idTarget, ofstream& output_file);
         bool AuxDijkstraVazio(bool* Visitado);
         Node* AuxDijkstraSeleciona(float* Dist, bool* NVisitado,  Node* source);
 
         //Funções (D)
-        float floydWarshall(int idSource, int idTarget);
+        float floydWarshall(int idSource, int idTarget, ofstream& output_file);
 
         //Funções (E) e auxiliares
         void AuxPrim();
-        Graph* Prim(int* ListIdNodes, int SubOrder);
+        Graph* Prim(int* ListIdNodes, int SubOrder, ofstream& output_file);
         bool AuxPrimVazio();
 
         //Funções (F) e auxiliares
-        Graph* Kruskal(int* ListIdNodes, int SubOrder);
+        Graph* Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file);
         void KruskalVerificaSubArv();
         void KruskalUneSubArv();
 
         //Funções (G) e auxiliares
-        void breadthFirstSearch(int IdSource);
+        void breadthFirstSearch(int IdSource, ofstream& output_file);
+        void AuxbreadthFirstSearch(int idSource);
 
         //Funções (H) e auxiliares
-        void TopologicalSorting();
-        int AuxTopologicalSorting(int i, bool* V, int* ordTop, int N);
+        void TopologicalSorting(ofstream& output_file);
+        int AuxTopologicalSorting(int i, bool* V, int* ordTop, int N, ofstream& output_file);
 
     private:
     

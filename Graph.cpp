@@ -339,7 +339,7 @@ void Graph::auxVertexInduced(Node* node)
 }
 
 //Subgrafo vertice-induzido pelo fecho transitivo direto (A)
-Graph* Graph::getVertexInducedDirect(int idSource)
+Graph* Graph::getVertexInducedDirect(int idSource, ofstream& output_file)
 {
     Node* node = getNode(idSource);
     Node* aux;
@@ -381,11 +381,24 @@ Graph* Graph::getVertexInducedDirect(int idSource)
 
     //criando subgrafo vertice induzido com os nós visitados
     Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
+
+    //Salvando grafo no arquivo de saída
+    if(output_file.is_open())
+        {
+            output_file << "GrafoVerticeInduzidoDireto {" << endl;
+            output_file << "}" << endl;
+        }
+        else
+            {
+                cerr << "erro ao abrir " << endl;
+                exit(1);
+            }
+
     return Sub_grafo;
 }
 
 //Subgrafo vertice-induzido pelo fecho transitivo indireto (B)
-Graph* Graph::getVertexInducedIndirect(int idSource)
+Graph* Graph::getVertexInducedIndirect(int idSource, ofstream& output_file)
 {
     Graph* Sub_grafo;
 
@@ -395,7 +408,7 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
 
     for(int i = 0; i < order; i++)
     {
-        Sub_grafo = getVertexInducedDirect(i);
+        Sub_grafo = getVertexInducedDirect(i, output_file);
         if(Sub_grafo->searchNode(idSource))
         {
             auxListIdNodes[i] = i;
@@ -419,12 +432,27 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
 
 
     Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
+
+
+    //Salvando grafo no arquivo de saída
+    if(output_file.is_open())
+        {
+            output_file << "GrafoVerticeInduzidoIndireto {" << endl;
+            output_file << "}" << endl;
+        }
+        else
+            {
+                cerr << "erro ao abrir " << endl;
+                exit(1);
+            }
+
+
     return Sub_grafo;
 
 }
 
 //Algoritmo de Dijkstra (C) e auxiliares
-float Graph::dijkstra(int idSource, int idTarget)
+float Graph::dijkstra(int idSource, int idTarget, ofstream& output_file)
 {
     Node* nodeSource = getNode(idSource);
     Node* aux;
@@ -433,9 +461,9 @@ float Graph::dijkstra(int idSource, int idTarget)
     bool* S = new bool[order];
     
     //Verificande se existem ciclos negativos no grafo
-    if(VerificaCiclos() == true)
+    if(VerificaCiclos(output_file) == true)
     {
-        if(VerificaCiclosNegativos() == true)
+        if(VerificaCiclosNegativos(output_file) == true)
         {
             return NULL;
         }
@@ -444,7 +472,7 @@ float Graph::dijkstra(int idSource, int idTarget)
     //Chamando função para setar vertices onde a origem não chega como nao visitados;
     if(getDirected())
     {
-        getVertexInducedDirect(idSource);
+        getVertexInducedDirect(idSource, output_file);
     }
     
     //Inicializando vertices
@@ -535,12 +563,12 @@ Node* Graph::AuxDijkstraSeleciona(float* Dist, bool* Visitado, Node* source)
 }
 
 //Algoritmo de Floyd (D)
-float Graph::floydWarshall(int idSource, int idTarget)
+float Graph::floydWarshall(int idSource, int idTarget, ofstream& output_file)
 {
     //Verificande se existem ciclos negativos no grafo
-    if(VerificaCiclos() == true)
+    if(VerificaCiclos(output_file) == true)
     {
-        if(VerificaCiclosNegativos() == true)
+        if(VerificaCiclosNegativos(output_file) == true)
         {
             return NULL;
         }
@@ -606,13 +634,26 @@ void Graph::AuxPrim()
 
 }
 
-Graph* Graph::Prim(int* ListIdNodes, int SubOrder)
+Graph* Graph::Prim(int* ListIdNodes, int SubOrder, ofstream& output_file)
 {
     Node* aux;
     Graph* Sub_grafo;
     //vector<Edge> teste;
     //list<Edge> test;
 
+    //Salvando grafo no arquivo de saída
+    if(output_file.is_open())
+        {
+            output_file << "ArvoreMinimaPrim {" << endl;
+            output_file << "}" << endl;
+        }
+        else
+            {
+                cerr << "erro ao abrir " << endl;
+                exit(1);
+            }
+
+    return Sub_grafo;
 }
 
 //Arvore Geradora Minima de Kruskal (F)
@@ -626,7 +667,7 @@ void Graph::KruskalUneSubArv()
     
 }
 
-Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder)
+Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
 {
     int cont = 0;
     Node* aux;
@@ -673,16 +714,64 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder)
         }
     }
     */
+
+   //Salvando grafo no arquivo de saída
+    if(output_file.is_open())
+        {
+            output_file << "ArvoreMinimaKruskal {" << endl;
+            output_file << "}" << endl;
+        }
+        else
+            {
+                cerr << "erro ao abrir " << endl;
+                exit(1);
+            }
+
+    return AuxGrafo;
 }
 
-//BFS (G)
-void Graph::breadthFirstSearch(int idSource)
+//Busca em largura (G)
+void Graph::AuxbreadthFirstSearch(int idSource)
 {
 
 }
 
+void Graph::breadthFirstSearch(int idSource, ofstream& output_file)
+{
+    Node* node;
+    bool* fila = new bool[order];
+    Graph* arv = new Graph(order, getDirected(), getWeightedEdge(), getWeightedNode());
+
+    for(int i = 0; i < order; i++)
+    {
+        if(i == idSource)
+        {
+
+        }else
+            {
+                fila[i] = false;
+            }
+        
+    }
+
+
+    //Salvando grafo no arquivo de saída
+    if(output_file.is_open())
+        {
+            output_file << "ArvoreBFS{" << endl;
+            output_file << "}" << endl;
+        }
+        else
+            {
+                cerr << "erro ao abrir " << endl;
+                exit(1);
+            }
+
+
+}
+
 //Ordenação topológica (H)
-int Graph::AuxTopologicalSorting(int i, bool* V, int* ordTop, int N)
+int Graph::AuxTopologicalSorting(int i, bool* V, int* ordTop, int N, ofstream& output_file)
 {
     Node* aux;
     Node* node = getNode(i);
@@ -692,20 +781,20 @@ int Graph::AuxTopologicalSorting(int i, bool* V, int* ordTop, int N)
         aux = getNode(j);
         if(V[j] == false && node->searchEdge(aux->getId()))
         {
-            N = AuxTopologicalSorting(j,V,ordTop,N);
+            N = AuxTopologicalSorting(j,V,ordTop,N, output_file);
         }
         ordTop[N] = i;
     }
     return N-1;
 }
 
-void Graph::TopologicalSorting()
+void Graph::TopologicalSorting(ofstream& output_file)
 {
     bool* V = new bool[order];
     int* ordTop = new int[order];
     int N = order-1;
 
-    if(VerificaCiclos() && getDirected())
+    if(VerificaCiclos(output_file) && getDirected())
     {
         cout << "Grafo ciclico direcionado!" << endl;
         return;
@@ -721,7 +810,7 @@ void Graph::TopologicalSorting()
     {
         if(V[i] == false)
         {
-           N = AuxTopologicalSorting(i,V,ordTop,N);
+           N = AuxTopologicalSorting(i,V,ordTop,N, output_file);
         }
     }
 
@@ -740,12 +829,12 @@ void Graph::TopologicalSorting()
 
 //Outras
 
-bool Graph::AuxVerificaCiclosNegativos(int i,bool* V)
+bool Graph::AuxVerificaCiclosNegativos(int i,bool* V, ofstream& output_file)
 {
     float Soma = 0;
     V[i] = true;
     Graph* NosPais;
-    NosPais = getVertexInducedIndirect(i);
+    NosPais = getVertexInducedIndirect(i, output_file);
     for(int j = 0; j < order; j++)
     {
         
@@ -770,13 +859,13 @@ bool Graph::AuxVerificaCiclosNegativos(int i,bool* V)
                     return true;
                 }
             }
-            AuxVerificaCiclos(j,V);
+            AuxVerificaCiclos(j,V, output_file);
         }
     }
     return false;
 }
 
-bool Graph::VerificaCiclosNegativos()
+bool Graph::VerificaCiclosNegativos(ofstream& output_file)
 {
     bool* V = new bool[order];
     for(int i = 0; i < order; i++)
@@ -784,18 +873,18 @@ bool Graph::VerificaCiclosNegativos()
         V[i] = false;
     }
 
-    if(AuxVerificaCiclosNegativos(0,V))
+    if(AuxVerificaCiclosNegativos(0,V, output_file))
     {
         return true;
     }
     return false;
 }
 
-bool Graph::AuxVerificaCiclos(int i,bool* V)
+bool Graph::AuxVerificaCiclos(int i,bool* V, ofstream& output_file)
 {
     V[i] = true;
     Graph* NosPais;
-    NosPais = getVertexInducedIndirect(i);
+    NosPais = getVertexInducedIndirect(i, output_file);
     for(int j = 0; j < order; j++)
     {
         
@@ -805,13 +894,13 @@ bool Graph::AuxVerificaCiclos(int i,bool* V)
             {
                 return true; // em alguns grafos especificos esse return é ignorado
             }
-            AuxVerificaCiclos(j,V);
+            AuxVerificaCiclos(j,V,output_file);
         }
     }
     return false;
 }
 
-bool Graph::VerificaCiclos()
+bool Graph::VerificaCiclos(ofstream& output_file)
 {
     bool* V = new bool[order];
     for(int i = 0; i < order; i++)
@@ -819,7 +908,7 @@ bool Graph::VerificaCiclos()
         V[i] = false;
     }
 
-    if(AuxVerificaCiclos(0,V))
+    if(AuxVerificaCiclos(0,V,output_file))
     {
         return true;
     }

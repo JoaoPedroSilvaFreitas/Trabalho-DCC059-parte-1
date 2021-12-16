@@ -72,7 +72,6 @@ Graph* Cria_Grafo(ifstream& input_file, int directed, int weightedEdge, int weig
     return graph;
 }
 
-
 char MainMenu(Graph* grafo)
 {
     char opt = '1';
@@ -94,8 +93,7 @@ char MainMenu(Graph* grafo)
     return opt;
 }
 
-
-void AuxMainMenu(Graph* grafo)
+void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
 {
     char opt = '1';
         while(opt != '0')
@@ -112,7 +110,7 @@ void AuxMainMenu(Graph* grafo)
                         cout << "Vertice:";
                         cin >> idSource;
                     }while(idSource > grafo->getOrder()-1 || idSource < 0);
-                    grafoDireto = grafo->getVertexInducedDirect(idSource);
+                    grafoDireto = grafo->getVertexInducedDirect(idSource, output_file);
                     grafoDireto->Print_Ad_list();
                 }else
                 cout << "ERRO: Grafo nao direcionado!" << endl;
@@ -129,7 +127,7 @@ void AuxMainMenu(Graph* grafo)
                         cout << "Vertice:";
                         cin >> idSource;
                     }while(idSource > grafo->getOrder()-1 || idSource < 0);
-                    grafoIndireto = grafo->getVertexInducedIndirect(idSource);
+                    grafoIndireto = grafo->getVertexInducedIndirect(idSource, output_file);
                     grafoIndireto->Print_Ad_list();
                 }else
                 cout << "ERRO: Grafo nao direcionado!" << endl;
@@ -149,7 +147,7 @@ void AuxMainMenu(Graph* grafo)
                     cout << "Destino:";
                     cin >> idTarget;
                 }while(idTarget > grafo->getOrder()-1 || idTarget < 0);
-                MenorCaminho = grafo->dijkstra(idSource,idTarget);
+                MenorCaminho = grafo->dijkstra(idSource,idTarget, output_file);
                 if(MenorCaminho == NULL)
                 {
                     cout << "ERRO:Grafo possui ciclos negativos!" << endl;
@@ -173,7 +171,7 @@ void AuxMainMenu(Graph* grafo)
                     cout << "Destino:";
                     cin >> idTarget;
                 }while(idTarget > grafo->getOrder()-1 || idTarget < 0);
-                MenorCaminho = grafo->floydWarshall(idSource,idTarget);
+                MenorCaminho = grafo->floydWarshall(idSource,idTarget, output_file);
                 if(MenorCaminho == NULL)
                 {
                     cout << "ERRO:Grafo possui ciclos negativos!" << endl;
@@ -207,7 +205,7 @@ void AuxMainMenu(Graph* grafo)
                     }
                     listIdNodes[i] = id;
                 }
-                grafo->Prim(listIdNodes,SubOrder);
+                grafo->Prim(listIdNodes,SubOrder, output_file);
             }
 
             //Algoritmo de Kruskal
@@ -234,7 +232,7 @@ void AuxMainMenu(Graph* grafo)
                     }
                     listIdNodes[i] = id;
                 }
-                grafo->Kruskal(listIdNodes,SubOrder);
+                grafo->Kruskal(listIdNodes,SubOrder, output_file);
             }
 
             //Caminhamento em largura
@@ -246,13 +244,13 @@ void AuxMainMenu(Graph* grafo)
                     cout << "Vertice:";
                     cin >> idSource;
                 }while(idSource > grafo->getOrder()-1 || idSource < 0);
-                grafo->breadthFirstSearch(idSource);
+                grafo->breadthFirstSearch(idSource, output_file);
             }
 
             //Ordenação topológica
             if(opt == 'h' || opt == 'H')
             {
-                grafo->TopologicalSorting();
+                grafo->TopologicalSorting(output_file);
             }
 
             //Imprime Lista de adjacência original
@@ -281,7 +279,6 @@ void AuxMainMenu(Graph* grafo)
         }
 }
 
-
 int main(int argc, const char*argv[])
 {
     //Verifica se foram passados todos parametros
@@ -291,9 +288,10 @@ int main(int argc, const char*argv[])
         return 1;
     }
 
-    //Declara duas strings que recebem nome do programa e o nome do arquivo de entrada
+    //Declara tres strings que recebem nome do programa, nome dos arquivos de entrada e saida
     string program_name(argv[0]);
     string input_file_name(argv[1]);
+    string output_file_name(argv[2]);
 
     //"Declara" arquivo de entrada e saida
     ifstream input_file;
@@ -314,11 +312,11 @@ int main(int argc, const char*argv[])
     }
     else
     {
-        cout << "Unable to open " << argv[1];
+        cout << "ERRO: Nao foi possivel abrir arquivo " << argv[1];
     } 
 
     //ADICIONAR MENU AQUI
-    AuxMainMenu(grafo);
+    AuxMainMenu(grafo,output_file,output_file_name);
 
    //Fechando arquivos de entrada e saída
     input_file.close();
