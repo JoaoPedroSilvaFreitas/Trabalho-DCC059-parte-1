@@ -150,7 +150,13 @@ void AuxMainMenu(Graph* grafo)
                     cin >> idTarget;
                 }while(idTarget > grafo->getOrder()-1 || idTarget < 0);
                 MenorCaminho = grafo->dijkstra(idSource,idTarget);
-                cout << "Menor distancia entre " << idSource << " e " << idTarget << ": " << MenorCaminho << endl;
+                if(MenorCaminho == NULL)
+                {
+                    cout << "ERRO:Grafo possui ciclos negativos!" << endl;
+                }else
+                    {
+                        cout << "Menor distancia entre " << idSource << " e " << idTarget << ": " << MenorCaminho << endl;
+                    }
             }
 
             //Algoritmo de Floyd
@@ -168,7 +174,13 @@ void AuxMainMenu(Graph* grafo)
                     cin >> idTarget;
                 }while(idTarget > grafo->getOrder()-1 || idTarget < 0);
                 MenorCaminho = grafo->floydWarshall(idSource,idTarget);
-                cout << "Menor distancia entre " << idSource << " e " << idTarget << ": " << MenorCaminho << endl;
+                if(MenorCaminho == NULL)
+                {
+                    cout << "ERRO:Grafo possui ciclos negativos!" << endl;
+                }else
+                    {
+                        cout << "Menor distancia entre " << idSource << " e " << idTarget << ": " << MenorCaminho << endl;
+                    }
             }
 
             //Algoritmo de Prim
@@ -234,6 +246,7 @@ void AuxMainMenu(Graph* grafo)
                     cout << "Vertice:";
                     cin >> idSource;
                 }while(idSource > grafo->getOrder()-1 || idSource < 0);
+                grafo->breadthFirstSearch(idSource);
             }
 
             //Ordenação topológica

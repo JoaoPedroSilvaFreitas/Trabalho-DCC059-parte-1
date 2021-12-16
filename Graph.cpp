@@ -426,11 +426,20 @@ Graph* Graph::getVertexInducedIndirect(int idSource)
 //Algoritmo de Dijkstra (C) e auxiliares
 float Graph::dijkstra(int idSource, int idTarget)
 {
-    //PRECISO VERIFICAR SE TEM CICLOS NEGATIVOS NO GRAFO
     Node* nodeSource = getNode(idSource);
     Node* aux;
     float* pi = new float[order];
+    float* piEstrela = new float[order];
     bool* S = new bool[order];
+    
+    //Verificande se existem ciclos negativos no grafo
+    if(VerificaCiclos() == true)
+    {
+        if(VerificaCiclosNegativos() == true)
+        {
+            return NULL;
+        }
+    }
 
     //Chamando função para setar vertices onde a origem não chega como nao visitados;
     if(getDirected())
@@ -444,7 +453,7 @@ float Graph::dijkstra(int idSource, int idTarget)
         aux = getNode(i);
 
         S[aux->getId()] = false;
-        pi[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito
+        pi[aux->getId()] = std::numeric_limits<float>::infinity();//seta a distancia como infinito   
 
         if(aux == nodeSource)
         {
@@ -473,7 +482,6 @@ float Graph::dijkstra(int idSource, int idTarget)
     }
 
     Node* j;
-    //CREIO QUE SE EU ADICIONAR UM || S[idTarget] == true   NO WHILE RESOLVERIA MEU PROBLEMA
     while(AuxDijkstraVazio(S))
     {
         j = AuxDijkstraSeleciona(pi,S,nodeSource);
@@ -481,19 +489,19 @@ float Graph::dijkstra(int idSource, int idTarget)
         for(int i = 0; i < order; i++)
         {
             aux = getNode(i);
-            if(S[aux->getId()] == false && j->searchEdge(aux->getId()))
+            if(j->searchEdge(aux->getId()))
             {
-                if(pi[aux->getId()] > pi[j->getId()] + j->getEdge(aux->getId())->getWeight())
+                piEstrela[aux->getId()] = pi[j->getId()] + j->getEdge(aux->getId())->getWeight();
+                if(piEstrela[aux->getId()] < pi[aux->getId()])
                 {
-                    pi[aux->getId()] = pi[j->getId()] + j->getEdge(aux->getId())->getWeight();
-                    //PRECISO ADICIONAR EXTENSAO PARA VALORES NEGATIVOS
+                    S[aux->getId()] = false;
+                    pi[aux->getId()] = piEstrela[aux->getId()];
                 }
             }
         }
     }
 
     return pi[idTarget];
-
 }
 
 bool Graph::AuxDijkstraVazio(bool* Visitado)
@@ -529,6 +537,15 @@ Node* Graph::AuxDijkstraSeleciona(float* Dist, bool* Visitado, Node* source)
 //Algoritmo de Floyd (D)
 float Graph::floydWarshall(int idSource, int idTarget)
 {
+    //Verificande se existem ciclos negativos no grafo
+    if(VerificaCiclos() == true)
+    {
+        if(VerificaCiclosNegativos() == true)
+        {
+            return NULL;
+        }
+    }
+
     float** Dist = new float*[order];
     for (int i = 0; i < order; i++)
     {
@@ -593,28 +610,9 @@ Graph* Graph::Prim(int* ListIdNodes, int SubOrder)
 {
     Node* aux;
     Graph* Sub_grafo;
-    bool* S = new bool[SubOrder];
-    float* pi = new float[SubOrder];
-    int* ant = new int[SubOrder];
+    //vector<Edge> teste;
+    //list<Edge> test;
 
-    for(int i = 0; i < SubOrder; i++)
-    {
-        aux = getNode(ListIdNodes[i]);
-        if(i == 0)
-        {
-            pi[i] = 0;
-            S[i] = true;
-        }else
-            {
-                pi[i] = std::numeric_limits<float>::infinity();
-                S[i] = false;
-            }
-    }
-
-    while(AuxPrimVazio())
-    {
-
-    }
 }
 
 //Arvore Geradora Minima de Kruskal (F)
@@ -632,8 +630,35 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder)
 {
     int cont = 0;
     Node* aux;
+    Node* aux2;
     Graph* AuxGrafo = getVertexInduced(ListIdNodes,SubOrder);
-    
+    int** mat = new int*[order];
+    for(int i = 0; i < order; i ++)
+    {
+        mat[i] = new int[order];
+    }
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        for(int j = 0; j < order; j++)
+        {
+            aux2 = getNode(j);
+            if(aux->searchEdge(aux2->getId()))
+            {
+                mat[i][j] = aux->getEdge(j)->getWeight();
+            }
+        }
+    }
+
+    for(int i = 0; i < order; i++)
+    {
+        for(int j = 0; j < order; j++)
+        {
+            cout << mat[i][j] << "  ";
+        }
+        cout << endl;
+    }
+
     //Criar Lista L com pesos das arestas em ordem crescente
     //Criar (order) subárvores contendo cada uma um nó isolado
     /*
@@ -650,13 +675,18 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder)
     */
 }
 
+//BFS (G)
+void Graph::breadthFirstSearch(int idSource)
+{
+
+}
+
 //Ordenação topológica (H)
 int Graph::AuxTopologicalSorting(int i, bool* V, int* ordTop, int N)
 {
     Node* aux;
     Node* node = getNode(i);
     V[i] = true;
-    node->setVisitado(true);
     for(int j = 0; j < order; j++)
     {
         aux = getNode(j);
@@ -683,7 +713,6 @@ void Graph::TopologicalSorting()
 
     for(int i = 0; i < order; i++)
     {
-        getNode(i)->setVisitado(false);
         V[i] = false;
         ordTop[i] = 0;
     }
@@ -706,6 +735,62 @@ void Graph::TopologicalSorting()
 }
 
 
+
+
+
+//Outras
+
+bool Graph::AuxVerificaCiclosNegativos(int i,bool* V)
+{
+    float Soma = 0;
+    V[i] = true;
+    Graph* NosPais;
+    NosPais = getVertexInducedIndirect(i);
+    for(int j = 0; j < order; j++)
+    {
+        
+        if(V[j] == false && getNode(i)->searchEdge(j))
+        {
+            if(NosPais->searchNode(j))
+            {
+                Node* aux;
+                for(int u = 0; u < NosPais->getOrder(); u++)
+                {
+                    aux = NosPais->getNode(u);
+                    for(int v = 0; v < NosPais->getOrder(); v++)
+                    {
+                        if(aux->searchEdge(NosPais->getNode(v)->getId()))
+                        {
+                            Soma = Soma + aux->getEdge(v)->getWeight();
+                        }
+                    }
+                }
+                if(Soma < 0)
+                {
+                    return true;
+                }
+            }
+            AuxVerificaCiclos(j,V);
+        }
+    }
+    return false;
+}
+
+bool Graph::VerificaCiclosNegativos()
+{
+    bool* V = new bool[order];
+    for(int i = 0; i < order; i++)
+    {
+        V[i] = false;
+    }
+
+    if(AuxVerificaCiclosNegativos(0,V))
+    {
+        return true;
+    }
+    return false;
+}
+
 bool Graph::AuxVerificaCiclos(int i,bool* V)
 {
     V[i] = true;
@@ -718,9 +803,8 @@ bool Graph::AuxVerificaCiclos(int i,bool* V)
         {
             if(NosPais->searchNode(j))
             {
-                return true; //O codigo simplesmente ignora esse return;
+                return true; // em alguns grafos especificos esse return é ignorado
             }
-            cout << j << endl;
             AuxVerificaCiclos(j,V);
         }
     }
@@ -730,11 +814,9 @@ bool Graph::AuxVerificaCiclos(int i,bool* V)
 bool Graph::VerificaCiclos()
 {
     bool* V = new bool[order];
-    bool* backEdge = new bool[order];
     for(int i = 0; i < order; i++)
     {
         V[i] = false;
-        backEdge[i] = false;
     }
 
     if(AuxVerificaCiclos(0,V))

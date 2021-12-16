@@ -33,7 +33,9 @@ class Graph
         Node* getNode(int id);
         void Print_Ad_list();
         bool VerificaCiclos();
-        bool  AuxVerificaCiclos(int i,bool* V);
+        bool AuxVerificaCiclos(int i,bool* V);
+        bool VerificaCiclosNegativos();
+        bool AuxVerificaCiclosNegativos(int i,bool* V);
 
         //Funções (A) (B) e auxiliares
         Graph* getVertexInduced(int* listIdNodes, int OrderSubGraph);
@@ -60,7 +62,7 @@ class Graph
         void KruskalUneSubArv();
 
         //Funções (G) e auxiliares
-        void breadthFirstSearch(ofstream& output_file);
+        void breadthFirstSearch(int IdSource);
 
         //Funções (H) e auxiliares
         void TopologicalSorting();
