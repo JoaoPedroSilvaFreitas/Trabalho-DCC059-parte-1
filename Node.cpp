@@ -1,6 +1,7 @@
 #include "Node.h"
 #include "Edge.h"
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -206,5 +207,29 @@ void Node::Print_Edges()
         }
         else
         cout << "[" << edge->getTargetId() << "]-->";
+    }
+}
+
+void Node::Print_Edges_OF(ofstream& output_file, bool directed)
+{
+    for(Edge* edge = first_edge; edge != nullptr; edge = edge->getNextEdge())
+    {
+        if(directed)
+        {
+            if(edge->getNextEdge() == nullptr)
+            {
+                output_file << edge->getTargetId() << ";";
+            }
+            else
+            output_file << edge->getTargetId() << "->";
+        }else
+            {
+                if(edge->getNextEdge() == nullptr)
+                {
+                    output_file << edge->getTargetId() << ";";
+                }
+                else
+                output_file << edge->getTargetId() << "--";
+            }
     }
 }

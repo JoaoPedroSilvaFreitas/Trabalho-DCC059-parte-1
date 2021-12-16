@@ -382,18 +382,6 @@ Graph* Graph::getVertexInducedDirect(int idSource, ofstream& output_file)
     //criando subgrafo vertice induzido com os nós visitados
     Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
 
-    //Salvando grafo no arquivo de saída
-    if(output_file.is_open())
-        {
-            output_file << "GrafoVerticeInduzidoDireto {" << endl;
-            output_file << "}" << endl;
-        }
-        else
-            {
-                cerr << "erro ao abrir " << endl;
-                exit(1);
-            }
-
     return Sub_grafo;
 }
 
@@ -432,21 +420,6 @@ Graph* Graph::getVertexInducedIndirect(int idSource, ofstream& output_file)
 
 
     Sub_grafo = getVertexInduced(listIdNodes,SubOrder);
-
-
-    //Salvando grafo no arquivo de saída
-    if(output_file.is_open())
-        {
-            output_file << "GrafoVerticeInduzidoIndireto {" << endl;
-            output_file << "}" << endl;
-        }
-        else
-            {
-                cerr << "erro ao abrir " << endl;
-                exit(1);
-            }
-
-
     return Sub_grafo;
 
 }
@@ -924,5 +897,23 @@ void Graph::Print_Ad_list()
         cout << "[" << aux->getId() << "]-->";
         aux->Print_Edges();
         cout << endl;
+    }
+}
+
+void Graph::Print_Graph_OF(ofstream& output_file)
+{
+    for(Node* aux = first_node; aux != nullptr; aux = aux->getNextNode())
+    {
+        if(getDirected())
+        {
+            output_file << "    " << aux->getId() << "->";
+            aux->Print_Edges_OF(output_file, true);
+            output_file << endl;
+        }else
+            {
+                output_file << "    " << aux->getId() << "--";
+                aux->Print_Edges_OF(output_file, false);
+                output_file << endl;
+            }
     }
 }

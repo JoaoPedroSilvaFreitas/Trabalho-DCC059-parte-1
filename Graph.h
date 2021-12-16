@@ -32,6 +32,7 @@ class Graph
         bool searchNode(int id);
         Node* getNode(int id);
         void Print_Ad_list();
+        void Print_Graph_OF(ofstream& output_file);
         bool VerificaCiclos(ofstream& output_file);
         bool AuxVerificaCiclos(int i,bool* V, ofstream& output_file);
         bool VerificaCiclosNegativos(ofstream& output_file);

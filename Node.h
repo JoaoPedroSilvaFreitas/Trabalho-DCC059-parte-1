@@ -1,6 +1,7 @@
 #ifndef NODE_H_INCLUDED
 #define NODE_H_INCLUDED
 #include "Edge.h"
+#include <fstream>
 
 using namespace std;
 
@@ -40,6 +41,7 @@ class Node
         void decrementInDegree();
         Edge* hasEdgeBetween(int target_id);
         void Print_Edges();
+        void Print_Edges_OF(ofstream& output_file, bool directed);
         int getNumberEdges();
 
 

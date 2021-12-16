@@ -6,7 +6,6 @@
 #include "Node.h"
 using namespace std;
 
-
 Graph* Cria_Grafo(ifstream& input_file, int directed, int weightedEdge, int weightedNode)
 {
 
@@ -112,6 +111,21 @@ void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
                     }while(idSource > grafo->getOrder()-1 || idSource < 0);
                     grafoDireto = grafo->getVertexInducedDirect(idSource, output_file);
                     grafoDireto->Print_Ad_list();
+
+                    //Salvando grafo no arquivo de saída
+                    if(output_file.is_open())
+                    {
+                        output_file << "GrafoVerticeInduzidoDireto {" << endl;
+                        grafoDireto->Print_Graph_OF(output_file);
+                        output_file << "}" << endl;
+                    }
+                    else
+                        {
+                            cerr << "erro ao abrir " << endl;
+                            exit(1);
+                        }                    
+
+
                 }else
                 cout << "ERRO: Grafo nao direcionado!" << endl;
             }
@@ -129,6 +143,19 @@ void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
                     }while(idSource > grafo->getOrder()-1 || idSource < 0);
                     grafoIndireto = grafo->getVertexInducedIndirect(idSource, output_file);
                     grafoIndireto->Print_Ad_list();
+
+                    //Salvando grafo no arquivo de saída
+                    if(output_file.is_open())
+                    {
+                        output_file << "GrafoVerticeInduzidoIndireto {" << endl;
+                        grafoIndireto->Print_Graph_OF(output_file);
+                        output_file << "}" << endl;
+                    }
+                    else
+                        {
+                            cerr << "erro ao abrir " << endl;
+                            exit(1);
+                        }
                 }else
                 cout << "ERRO: Grafo nao direcionado!" << endl;
             }
