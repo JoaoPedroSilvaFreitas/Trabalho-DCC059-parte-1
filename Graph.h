@@ -4,6 +4,7 @@
 #include <fstream>
 #include <stack>
 #include <list>
+#include <queue>
 
 using namespace std;
 
@@ -59,12 +60,13 @@ class Graph
 
         //Funções (F) e auxiliares
         Graph* Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file);
-        void KruskalVerificaSubArv();
-        void KruskalUneSubArv();
+        bool KruskalVerificaVazio(float* EdgeW);
+        void KruskalUneSubArv(Graph* Sub_Arv, int idSource, int idTarget, float Eweight);
+        bool KruskalVerificaSubArv(Graph* SubArv, int idSource, int idTarget);
 
         //Funções (G) e auxiliares
         void breadthFirstSearch(int IdSource, ofstream& output_file);
-        void AuxbreadthFirstSearch(int idSource);
+        void AuxbreadthFirstSearch(Graph* arv, int idSource, bool* V, std::queue<int> Q);
 
         //Funções (H) e auxiliares
         void TopologicalSorting(ofstream& output_file);

@@ -5,6 +5,7 @@
 #include <fstream>
 #include <vector>
 #include <limits>
+#include <queue>
 
 using namespace std;
 
@@ -611,8 +612,46 @@ Graph* Graph::Prim(int* ListIdNodes, int SubOrder, ofstream& output_file)
 {
     Node* aux;
     Graph* Sub_grafo;
-    //vector<Edge> teste;
-    //list<Edge> test;
+    float* Eweight = new float[number_edges]; // vetor com valor da aresta
+    int* idSource = new int[number_edges]; //vetor com id de saida da aresta
+    int* idTarget = new int[number_edges]; // vetor com id de chegada da aresta
+    int k = 0;
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        for(int j = 0; j < order; j++)
+        {
+            if(aux->searchEdge(j))
+            {
+                idSource[k] = i;
+                idTarget[k] = j;
+                Eweight[k] = aux->getEdge(j)->getWeight();
+                k++;
+            }
+        }
+    }
+
+    //Organizando arestas em ordem crescente
+    int tempW, tempS, tempT;
+    for(int i = 0; i < number_edges; i++)
+    {
+        for( int j = i + 1; j < number_edges; j++)
+        {
+            if(Eweight[i] > Eweight[j])
+                {
+                    tempW = Eweight[i];
+                    tempS = idSource[i];
+                    tempT = idTarget[i];
+                    Eweight[i] = Eweight[j];
+                    idSource[i] = idSource[j];
+                    idTarget[i] = idTarget[j];
+                    Eweight[j] = tempW;
+                    idSource[j] = tempS;
+                    idTarget[j] = tempT;
+                }
+        }
+    }
+
 
     //Salvando grafo no arquivo de saída
     if(output_file.is_open())
@@ -630,47 +669,96 @@ Graph* Graph::Prim(int* ListIdNodes, int SubOrder, ofstream& output_file)
 }
 
 //Arvore Geradora Minima de Kruskal (F)
-void Graph::KruskalVerificaSubArv()
+bool Graph::KruskalVerificaVazio(float* EdgeW)
 {
+    for(int i = 0; i < order; i++)
+    {
+        if(EdgeW[i] != NULL)
+        {
+            return false;//lista nao vazia
+        }
+    }
 
+    return true;//lista vazia
 }
 
-void Graph::KruskalUneSubArv()
+bool Graph::KruskalVerificaSubArv(Graph* SubArv, int idSource, int idTarget)
 {
-    
+    Node* aux;
+    aux = SubArv->getNode(idSource);
+    if(aux->searchEdge(idTarget))
+    {
+        return true;
+    }
+    return false;
+}
+
+void Graph::KruskalUneSubArv(Graph* SubArv, int idSource, int idTarget, float Eweight)
+{
+    Node* aux;
+    aux = SubArv->getNode(idSource);
 }
 
 Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
 {
-    int cont = 0;
     Node* aux;
-    Node* aux2;
-    Graph* AuxGrafo = getVertexInduced(ListIdNodes,SubOrder);
-    int** mat = new int*[order];
-    for(int i = 0; i < order; i ++)
-    {
-        mat[i] = new int[order];
-    }
+    Graph* SubArv;
+    SubArv = new Graph(SubOrder, ListIdNodes, getDirected(), getWeightedEdge(), getWeightedNode()); // criando N subarvores
+    float* Eweight = new float[number_edges]; // vetor com valor da aresta
+    int* idSource = new int[number_edges]; //vetor com id de saida da aresta
+    int* idTarget = new int[number_edges]; // vetor com id de chegada da aresta
+    int k = 0, cont = 0;
     for(int i = 0; i < order; i++)
     {
         aux = getNode(i);
         for(int j = 0; j < order; j++)
         {
-            aux2 = getNode(j);
-            if(aux->searchEdge(aux2->getId()))
+            if(aux->searchEdge(j))
             {
-                mat[i][j] = aux->getEdge(j)->getWeight();
+                idSource[k] = i;
+                idTarget[k] = j;
+                Eweight[k] = aux->getEdge(j)->getWeight();
+                k++;
             }
         }
     }
 
-    for(int i = 0; i < order; i++)
+    //Organizando arestas em ordem crescente
+    int tempW, tempS, tempT;
+    for(int i = 0; i < number_edges; i++)
     {
-        for(int j = 0; j < order; j++)
+        for( int j = i + 1; j < number_edges; j++)
         {
-            cout << mat[i][j] << "  ";
+            if(Eweight[i] > Eweight[j])
+                {
+                    tempW = Eweight[i];
+                    tempS = idSource[i];
+                    tempT = idTarget[i];
+                    Eweight[i] = Eweight[j];
+                    idSource[i] = idSource[j];
+                    idTarget[i] = idTarget[j];
+                    Eweight[j] = tempW;
+                    idSource[j] = tempS;
+                    idTarget[j] = tempT;
+                }
         }
-        cout << endl;
+    }
+    
+    
+
+
+     while(cont < SubOrder-1 && KruskalVerificaVazio(Eweight) == false)
+    {
+        //ids da areta de menor peso
+        idSource[cont];
+        idTarget[cont];
+        if(KruskalVerificaSubArv(SubArv,idSource[cont],idTarget[cont]) == false)
+        {
+            KruskalUneSubArv(SubArv,idSource[cont],idTarget[cont],Eweight[cont]);
+            cont++;
+        }
+        //"removendo" aresta da lista
+        Eweight[cont] = NULL;
     }
 
     //Criar Lista L com pesos das arestas em ordem crescente
@@ -692,6 +780,7 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
     if(output_file.is_open())
         {
             output_file << "ArvoreMinimaKruskal {" << endl;
+            SubArv->Print_Graph_OF(output_file);
             output_file << "}" << endl;
         }
         else
@@ -700,38 +789,51 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
                 exit(1);
             }
 
-    return AuxGrafo;
 }
 
 //Busca em largura (G)
-void Graph::AuxbreadthFirstSearch(int idSource)
-{
 
+void Graph::AuxbreadthFirstSearch(Graph* arv, int idSource, bool* V, std::queue<int> Q)
+{
+    
 }
 
 void Graph::breadthFirstSearch(int idSource, ofstream& output_file)
 {
-    Node* node;
-    bool* fila = new bool[order];
+    Node* aux;
+    bool* V = new bool[order];
     Graph* arv = new Graph(order, getDirected(), getWeightedEdge(), getWeightedNode());
-
     for(int i = 0; i < order; i++)
     {
         if(i == idSource)
         {
-
-        }else
-            {
-                fila[i] = false;
-            }
-        
+            V[i] = true;
+        }else{
+            V[i] = false;
+        }
     }
-
+    std::queue<int> Q;
+    Q.push(idSource);
+    while(!Q.empty())
+    {
+        Node* aux = getNode(Q.front());
+        for(int i = 0; i < order; i++)
+        {
+            if(V[i] == false && aux->searchEdge(i))
+            {
+                V[i] == true;
+                arv->getNode(Q.front())->insertEdge(i,aux->getEdge(i)->getWeight());
+                Q.push(i);
+            }
+        }
+        Q.pop();
+    }
 
     //Salvando grafo no arquivo de saída
     if(output_file.is_open())
         {
             output_file << "ArvoreBFS{" << endl;
+            arv->Print_Graph_OF(output_file);
             output_file << "}" << endl;
         }
         else

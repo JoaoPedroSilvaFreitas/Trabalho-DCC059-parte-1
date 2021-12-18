@@ -24,7 +24,7 @@ class Edge
         int target_id;
         Edge* next_edge;
         float weight;
-
+        int id;
 }; 
 
 #endif // EDGE_H_INCLUDED
