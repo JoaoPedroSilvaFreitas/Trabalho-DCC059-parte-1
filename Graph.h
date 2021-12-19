@@ -54,9 +54,7 @@ class Graph
         float floydWarshall(int idSource, int idTarget, ofstream& output_file);
 
         //Funções (E) e auxiliares
-        void AuxPrim();
         Graph* Prim(int* ListIdNodes, int SubOrder, ofstream& output_file);
-        bool AuxPrimVazio();
 
         //Funções (F) e auxiliares
         Graph* Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file);

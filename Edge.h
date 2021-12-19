@@ -8,12 +8,14 @@ class Edge
     public:
         // Constructor e Destructor
         Edge(int target_id);
+        Edge(int source_id, int target_id, float weight);
         ~Edge();
 
         // Getters
         int getTargetId();
         Edge* getNextEdge();
         float getWeight();
+        int getSourceId();
 
 
         // Setters
@@ -24,7 +26,7 @@ class Edge
         int target_id;
         Edge* next_edge;
         float weight;
-        int id;
+        int source_id;
 }; 
 
 #endif // EDGE_H_INCLUDED

@@ -6,6 +6,7 @@
 #include <vector>
 #include <limits>
 #include <queue>
+#include <list>
 
 using namespace std;
 
@@ -598,24 +599,27 @@ float Graph::floydWarshall(int idSource, int idTarget, ofstream& output_file)
 }
 
 //Arvore Geradora Minima de Prim (E)
-bool Graph::AuxPrimVazio()
-{
-
-}
-
-void Graph::AuxPrim()
-{
-
-}
-
 Graph* Graph::Prim(int* ListIdNodes, int SubOrder, ofstream& output_file)
 {
+    Graph* Arv = new Graph(SubOrder, ListIdNodes, getDirected(), getWeightedEdge(), getWeightedNode());
+    queue<Edge>PQ;
+    Edge* edge;
     Node* aux;
-    Graph* Sub_grafo;
+    bool* V = new bool[order];
     float* Eweight = new float[number_edges]; // vetor com valor da aresta
     int* idSource = new int[number_edges]; //vetor com id de saida da aresta
     int* idTarget = new int[number_edges]; // vetor com id de chegada da aresta
     int k = 0;
+    int ArvNE = order - 1;
+    int cont = 0;
+    float MSTcost = 0;
+
+    for(int i = 0; i < order; i++)
+    {
+        V[i] = false;
+    }
+
+    //adicionando informações das arestas em 3 vetores
     for(int i = 0; i < order; i++)
     {
         aux = getNode(i);
@@ -652,11 +656,45 @@ Graph* Graph::Prim(int* ListIdNodes, int SubOrder, ofstream& output_file)
         }
     }
 
+    //Preenchendo fila com arestas em ordem crescente
+    for(int i = 0; i < number_edges; i++)
+    {
+        PQ.push(Edge(idSource[i],idTarget[i],Eweight[i]));
+    }
+
+    //Loop para percorrer fila 
+    while(!PQ.empty() && cont != ArvNE)
+    {   
+        //Verifica se o no orgem e o no de chegada da aresta estao na arvore
+        if(Arv->searchNode(PQ.front().getSourceId()) == true && Arv->searchNode(PQ.front().getTargetId()) == true)
+        {
+            //verificar se o no de chegada ainda nao possui aresta na arvore
+            if(V[PQ.front().getTargetId()] == false)
+            {
+                aux = Arv->getNode(PQ.front().getSourceId());
+                aux->insertEdge(PQ.front().getTargetId(), PQ.front().getWeight());//Inserindo aresta na arvore
+                V[PQ.front().getTargetId()] = true;//informando que no agora possui aresta
+                PQ.pop();
+                cont++;
+            }else
+                {
+                    PQ.pop();//caso ja tenha aresta na arvore remover da lista
+                }
+        }else
+            {
+                PQ.pop();//caso nao estejam na arvore remover da lista
+            }
+        
+    }
+
+    //imprimindo arvore na tela
+    Arv->Print_Ad_list();
 
     //Salvando grafo no arquivo de saída
     if(output_file.is_open())
         {
             output_file << "ArvoreMinimaPrim {" << endl;
+            Arv->Print_Graph_OF(output_file);
             output_file << "}" << endl;
         }
         else
@@ -665,7 +703,7 @@ Graph* Graph::Prim(int* ListIdNodes, int SubOrder, ofstream& output_file)
                 exit(1);
             }
 
-    return Sub_grafo;
+    return Arv;
 }
 
 //Arvore Geradora Minima de Kruskal (F)
@@ -702,8 +740,8 @@ void Graph::KruskalUneSubArv(Graph* SubArv, int idSource, int idTarget, float Ew
 Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
 {
     Node* aux;
-    Graph* SubArv;
-    SubArv = new Graph(SubOrder, ListIdNodes, getDirected(), getWeightedEdge(), getWeightedNode()); // criando N subarvores
+    Graph* Arv;
+    Arv = new Graph(SubOrder, ListIdNodes, getDirected(), getWeightedEdge(), getWeightedNode()); // criando N subarvores
     float* Eweight = new float[number_edges]; // vetor com valor da aresta
     int* idSource = new int[number_edges]; //vetor com id de saida da aresta
     int* idTarget = new int[number_edges]; // vetor com id de chegada da aresta
@@ -752,9 +790,9 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
         //ids da areta de menor peso
         idSource[cont];
         idTarget[cont];
-        if(KruskalVerificaSubArv(SubArv,idSource[cont],idTarget[cont]) == false)
+        if(KruskalVerificaSubArv(Arv,idSource[cont],idTarget[cont]) == false)
         {
-            KruskalUneSubArv(SubArv,idSource[cont],idTarget[cont],Eweight[cont]);
+            KruskalUneSubArv(Arv,idSource[cont],idTarget[cont],Eweight[cont]);
             cont++;
         }
         //"removendo" aresta da lista
@@ -780,7 +818,7 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
     if(output_file.is_open())
         {
             output_file << "ArvoreMinimaKruskal {" << endl;
-            SubArv->Print_Graph_OF(output_file);
+            Arv->Print_Graph_OF(output_file);
             output_file << "}" << endl;
         }
         else
@@ -788,7 +826,7 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
                 cerr << "erro ao abrir " << endl;
                 exit(1);
             }
-
+    return Arv;
 }
 
 //Busca em largura (G)
@@ -821,21 +859,6 @@ void Graph::breadthFirstSearch(int idSource, ofstream& output_file)
                 V[i] = true;
             }
         }
-
-
-        /*
-        Node* aux = getNode(Q.front());
-        for(int i = 0; i < order; i++)
-        {
-            if(V[i] == false && aux->searchEdge(i))
-            {
-                arv->getNode(Q.front())->insertEdge(i,aux->getEdge(i)->getWeight());
-                Q.push(i);
-            }
-        }
-        V[Q.front()] = true;
-        Q.pop();
-        */
     }
 
     //Salvando grafo no arquivo de saída
@@ -850,7 +873,6 @@ void Graph::breadthFirstSearch(int idSource, ofstream& output_file)
                 cerr << "erro ao abrir " << endl;
                 exit(1);
             }
-
 
 }
 

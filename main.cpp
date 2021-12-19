@@ -215,7 +215,7 @@ void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
                 int id;
                 cout << "Digite o tamanho da lista de vertices: ";
                 cin >> SubOrder;
-                while(SubOrder > grafo->getOrder()-1 || SubOrder < 0)
+                while(SubOrder > grafo->getOrder() || SubOrder < 0)
                 {
                     cout << "Digite o tamanho da lista de vertices: ";
                     cin >> SubOrder;
@@ -242,7 +242,7 @@ void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
                 int id;
                 cout << "Digite o tamanho da lista de vertices: ";
                 cin >> SubOrder;
-                while(SubOrder > grafo->getOrder()-1 || SubOrder < 0)
+                while(SubOrder > grafo->getOrder() || SubOrder < 0)
                 {
                     cout << "Digite o tamanho da lista de vertices: ";
                     cin >> SubOrder;
@@ -315,7 +315,7 @@ int main(int argc, const char*argv[])
         return 1;
     }
 
-    //Declara tres strings que recebem nome do programa, nome dos arquivos de entrada e saida
+    //Declara três strings que recebem nome do programa, nome dos arquivos de entrada e saida
     string program_name(argv[0]);
     string input_file_name(argv[1]);
     string output_file_name(argv[2]);
@@ -340,6 +340,7 @@ int main(int argc, const char*argv[])
     else
     {
         cout << "ERRO: Nao foi possivel abrir arquivo " << argv[1];
+        exit(1);
     } 
 
     //ADICIONAR MENU AQUI

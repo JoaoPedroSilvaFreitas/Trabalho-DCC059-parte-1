@@ -11,6 +11,15 @@ Edge::Edge(int target_id)
     this->weight = 0;
 }
 
+Edge::Edge(int source_id, int target_id, float weight)
+{
+    this->source_id = source_id;
+    this->target_id = target_id;
+    this->weight = weight;
+    this->next_edge = nullptr;
+    this->weight = 0;
+}
+
 Edge::~Edge()
 {
     if (this->next_edge != nullptr)
@@ -34,6 +43,11 @@ Edge* Edge::getNextEdge()
 float Edge::getWeight()
 {
     return this->weight;
+}
+
+int Edge::getSourceId()
+{
+    return this->source_id;
 }
 
 // Setters
