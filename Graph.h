@@ -58,9 +58,6 @@ class Graph
 
         //Funções (F) e auxiliares
         Graph* Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file);
-        bool KruskalVerificaVazio(float* EdgeW);
-        void KruskalUneSubArv(Graph* Sub_Arv, int idSource, int idTarget, float Eweight);
-        bool KruskalVerificaSubArv(Graph* SubArv, int idSource, int idTarget);
 
         //Funções (G) e auxiliares
         void breadthFirstSearch(int IdSource, ofstream& output_file);

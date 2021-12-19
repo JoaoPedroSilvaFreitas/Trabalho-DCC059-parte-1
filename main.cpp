@@ -85,7 +85,6 @@ char MainMenu(Graph* grafo)
     cout << "H- Imprimir ordenacao topologica" << endl;
     cout << "----------------------------Funcoes adicionais----------------------------" << endl;
     cout << "I- Imprime lista original" << endl;
-    cout << "J- Subgrafo induzido por conjunto de vertices" << endl;
     cout << "0- Sair" << endl;
     cout << "--------------------------------------------------------------------------" << endl;
     cin >> opt;
@@ -283,26 +282,22 @@ void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
             //Imprime Lista de adjacência original
             if(opt == 'i' || opt == 'I')
             {
+                //imprime na tela
                 grafo->Print_Ad_list();
-            }
-
-            //Subgrafo induzido por conjunto de vertices
-            if(opt == 'j' || opt == 'J')
-            {
-                int OrderSubGraph;
-                Graph* sub_grafo;
-                cout << "Ordem do subgrafo vertice induzido:";
-                cin >> OrderSubGraph;
-                int* listIdNodes = new int[OrderSubGraph];
-                cout << "Conjunto de Id dos nos:" << endl;
-                for(int i = 0; i < OrderSubGraph; i++)
+                //Salva no arquivo de saida
+                if(output_file.is_open())
                 {
-                    cin >> listIdNodes[i];
+                    output_file << "GrafoOriginal {" << endl;
+                    grafo->Print_Graph_OF(output_file);
+                    output_file << "}" << endl;
                 }
-
-                sub_grafo = grafo->getVertexInduced(listIdNodes, OrderSubGraph);
-                sub_grafo->Print_Ad_list();
+                else
+                    {
+                        cerr << "erro ao abrir " << endl;
+                        exit(1);
+                    }
             }
+
         }
 }
 
