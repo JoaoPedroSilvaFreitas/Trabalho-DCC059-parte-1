@@ -792,15 +792,10 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
 }
 
 //Busca em largura (G)
-
-void Graph::AuxbreadthFirstSearch(Graph* arv, int idSource, bool* V, std::queue<int> Q)
-{
-    
-}
-
 void Graph::breadthFirstSearch(int idSource, ofstream& output_file)
 {
     Node* aux;
+    std::queue<int> Q;
     bool* V = new bool[order];
     Graph* arv = new Graph(order, getDirected(), getWeightedEdge(), getWeightedNode());
     for(int i = 0; i < order; i++)
@@ -812,21 +807,35 @@ void Graph::breadthFirstSearch(int idSource, ofstream& output_file)
             V[i] = false;
         }
     }
-    std::queue<int> Q;
     Q.push(idSource);
     while(!Q.empty())
     {
+        Node* aux = getNode(Q.front());
+        Q.pop();
+        for(int i = 0; i < order; i++)
+        {
+            if(V[i] == false && aux->searchEdge(i))
+            {
+                arv->getNode(aux->getId())->insertEdge(i,aux->getEdge(i)->getWeight());
+                Q.push(i);
+                V[i] = true;
+            }
+        }
+
+
+        /*
         Node* aux = getNode(Q.front());
         for(int i = 0; i < order; i++)
         {
             if(V[i] == false && aux->searchEdge(i))
             {
-                V[i] == true;
                 arv->getNode(Q.front())->insertEdge(i,aux->getEdge(i)->getWeight());
                 Q.push(i);
             }
         }
+        V[Q.front()] = true;
         Q.pop();
+        */
     }
 
     //Salvando grafo no arquivo de saída
@@ -897,8 +906,6 @@ void Graph::TopologicalSorting(ofstream& output_file)
     cout << endl;
 
 }
-
-
 
 
 
@@ -1008,14 +1015,27 @@ void Graph::Print_Graph_OF(ofstream& output_file)
     {
         if(getDirected())
         {
-            output_file << "    " << aux->getId() << "->";
-            aux->Print_Edges_OF(output_file, true);
-            output_file << endl;
-        }else
+            if(aux->getNumberEdges() == 0)
             {
+                output_file << "    " << aux->getId() << ";" << endl;
+            }else
+                {
+                output_file << "    " << aux->getId() << "->";
+                aux->Print_Edges_OF(output_file, true);
+                output_file << endl;
+                }
+            
+        }else
+        {
+            if(aux->getNumberEdges() == 0)
+            {
+                output_file << "    " << aux->getId() << ";" << endl;
+            }else
+                {
                 output_file << "    " << aux->getId() << "--";
                 aux->Print_Edges_OF(output_file, false);
                 output_file << endl;
-            }
+                }
+        }
     }
 }

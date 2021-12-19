@@ -66,7 +66,6 @@ class Graph
 
         //Funções (G) e auxiliares
         void breadthFirstSearch(int IdSource, ofstream& output_file);
-        void AuxbreadthFirstSearch(Graph* arv, int idSource, bool* V, std::queue<int> Q);
 
         //Funções (H) e auxiliares
         void TopologicalSorting(ofstream& output_file);
