@@ -75,8 +75,8 @@ char MainMenu(Graph* grafo)
 {
     char opt = '1';
     cout << "--------------------------------Main Menu---------------------------------" << endl;
-    cout << "A- Subgrafo vertice-induzido pelo fecho transitivo direto(DIRECIONADO)" << endl;
-    cout << "B- Subgrafo vertice-induzido pelo fecho transitivo indireto(DIRECIONADO)" << endl;
+    cout << "A- Subgrafo vertice-induzido pelo fecho transitivo direto" << endl;
+    cout << "B- Subgrafo vertice-induzido pelo fecho transitivo indireto" << endl;
     cout << "C- Caminho Minimo entre dois vertices - Dijkstra" << endl;
     cout << "D- Caminho Minimo entre dois vertices - Floyd" << endl;
     cout << "E- Arvore Geradora Minima de Prim" << endl;

@@ -8,7 +8,7 @@ class Edge
     public:
         // Constructor e Destructor
         Edge(int target_id);
-        Edge(int source_id, int target_id, float weight);
+        Edge(int source_id, int target_id, float weight);//Construtor para auxiliar Prim e Kruskal
         ~Edge();
 
         // Getters

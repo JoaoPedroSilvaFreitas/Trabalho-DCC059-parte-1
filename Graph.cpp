@@ -599,91 +599,52 @@ float Graph::floydWarshall(int idSource, int idTarget, ofstream& output_file)
 }
 
 //Arvore Geradora Minima de Prim (E)
+void  Graph::AuxPrim(int id, bool* V, std::queue<Edge> &PQ, int SubOrder, int* ListIdNodes)
+{
+    Node* aux = getNode(id);
+    V[id] = true;
+    for(int i = 0; i < SubOrder; i++)
+    {
+        if(aux->searchEdge(ListIdNodes[i]) && V[ListIdNodes[i]] == false)
+        {
+            PQ.push(Edge(id,ListIdNodes[i],aux->getEdge(ListIdNodes[i])->getWeight()));
+        }
+    }
+}
+
 Graph* Graph::Prim(int* ListIdNodes, int SubOrder, ofstream& output_file)
 {
     Graph* Arv = new Graph(SubOrder, ListIdNodes, getDirected(), getWeightedEdge(), getWeightedNode());
-    queue<Edge>PQ;
+    std::queue<Edge>PQ;
     Edge* edge;
     Node* aux;
     bool* V = new bool[order];
-    float* Eweight = new float[number_edges]; // vetor com valor da aresta
-    int* idSource = new int[number_edges]; //vetor com id de saida da aresta
-    int* idTarget = new int[number_edges]; // vetor com id de chegada da aresta
-    int k = 0;
-    int ArvNE = order - 1;
+    int ArvNE = SubOrder - 1;
     int cont = 0;
+    int NodeIndex;
 
     for(int i = 0; i < order; i++)
     {
         V[i] = false;
     }
 
-    //adicionando informações das arestas em 3 vetores
-    for(int i = 0; i < order; i++)
-    {
-        aux = getNode(i);
-        for(int j = 0; j < order; j++)
-        {
-            if(aux->searchEdge(j))
-            {
-                idSource[k] = i;
-                idTarget[k] = j;
-                Eweight[k] = aux->getEdge(j)->getWeight();
-                k++;
-            }
-        }
-    }
-
-    //Organizando arestas em ordem crescente
-    int tempW, tempS, tempT;
-    for(int i = 0; i < number_edges; i++)
-    {
-        for( int j = i + 1; j < number_edges; j++)
-        {
-            if(Eweight[i] > Eweight[j])
-                {
-                    tempW = Eweight[i];
-                    tempS = idSource[i];
-                    tempT = idTarget[i];
-                    Eweight[i] = Eweight[j];
-                    idSource[i] = idSource[j];
-                    idTarget[i] = idTarget[j];
-                    Eweight[j] = tempW;
-                    idSource[j] = tempS;
-                    idTarget[j] = tempT;
-                }
-        }
-    }
-
-    //Preenchendo fila com arestas em ordem crescente
-    for(int i = 0; i < number_edges; i++)
-    {
-        PQ.push(Edge(idSource[i],idTarget[i],Eweight[i]));
-    }
-
-    //Loop para percorrer fila 
+    AuxPrim(ListIdNodes[0],V,PQ,SubOrder,ListIdNodes);
     while(!PQ.empty() && cont != ArvNE)
-    {   
-        //Verifica se o no origem e o no de chegada da aresta estao na arvore
-        if(Arv->searchNode(PQ.front().getSourceId()) == true && Arv->searchNode(PQ.front().getTargetId()) == true)
+    {
+        NodeIndex = PQ.front().getTargetId();
+        //cout << PQ.front().getSourceId() << "," << PQ.front().getTargetId() << endl;
+        if(V[NodeIndex] == false)
         {
-            //verificar se o no de chegada ainda nao possui aresta na arvore
-            if(V[PQ.front().getTargetId()] == false)
-            {
-                aux = Arv->getNode(PQ.front().getSourceId());
-                aux->insertEdge(PQ.front().getTargetId(), PQ.front().getWeight());//Inserindo aresta na arvore
-                V[PQ.front().getTargetId()] = true;//informando que no agora possui aresta
-                PQ.pop();
-                cont++;
-            }else
-                {
-                    PQ.pop();//caso ja tenha aresta na arvore remover da lista
-                }
+            Arv->insertEdge(PQ.front().getSourceId(), PQ.front().getTargetId(), PQ.front().getWeight());
+            cont++;
+            PQ.pop();
+            
         }else
             {
-                PQ.pop();//caso nao estejam na arvore remover da lista
+                PQ.pop();
             }
-        
+
+        AuxPrim(NodeIndex,V,PQ,SubOrder,ListIdNodes); 
     }
 
     //imprimindo arvore na tela
