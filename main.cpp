@@ -6,6 +6,11 @@
 #include "Node.h"
 using namespace std;
 
+/*
+ Grupo 41:
+    -João Pedro Silva Freitas 201935033
+*/
+
 Graph* Cria_Grafo(ifstream& input_file, int directed, int weightedEdge, int weightedNode)
 {
 

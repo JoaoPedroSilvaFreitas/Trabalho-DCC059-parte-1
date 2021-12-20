@@ -878,7 +878,6 @@ void Graph::TopologicalSorting(ofstream& output_file)
 
 
 //Outras
-
 bool Graph::AuxVerificaCiclosNegativos(int i,bool* V, ofstream& output_file)
 {
     float Soma = 0;
