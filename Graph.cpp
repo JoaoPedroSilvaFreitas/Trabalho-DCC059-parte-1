@@ -435,7 +435,7 @@ float Graph::dijkstra(int idSource, int idTarget, ofstream& output_file)
     float* piEstrela = new float[order];
     bool* S = new bool[order];
     
-    //Verificande se existem ciclos negativos no grafo
+    //Verificando se existem ciclos negativos no grafo
     if(VerificaCiclos(output_file) == true)
     {
         if(VerificaCiclosNegativos(output_file) == true)
@@ -599,52 +599,106 @@ float Graph::floydWarshall(int idSource, int idTarget, ofstream& output_file)
 }
 
 //Arvore Geradora Minima de Prim (E)
-void  Graph::AuxPrim(int id, bool* V, std::queue<Edge> &PQ, int SubOrder, int* ListIdNodes)
+bool Graph::AuxPrim(float min, float** custo, int* prox)
 {
-    Node* aux = getNode(id);
-    V[id] = true;
-    for(int i = 0; i < SubOrder; i++)
+    float Min = std::numeric_limits<float>::infinity();
+    for(int i = 0; i < order; i++)
     {
-        if(aux->searchEdge(ListIdNodes[i]) && V[ListIdNodes[i]] == false)
+        for(int j = 0; j < order; j++)
         {
-            PQ.push(Edge(id,ListIdNodes[i],aux->getEdge(ListIdNodes[i])->getWeight()));
+            if(prox[i] != -1 && custo[i][j] < Min)
+            {
+                Min = custo[i][j];
+            }
         }
     }
+    if(min == Min)
+    {
+        return true;
+    }else
+        {
+            return false;
+        }
 }
 
 Graph* Graph::Prim(int* ListIdNodes, int SubOrder, ofstream& output_file)
 {
     Graph* Arv = new Graph(SubOrder, ListIdNodes, getDirected(), getWeightedEdge(), getWeightedNode());
-    std::queue<Edge>PQ;
-    Edge* edge;
+    int* prox = new int[SubOrder];
+    float** custo = new float*[SubOrder];
+    float EdgeMenorCusto = std::numeric_limits<float>::infinity();
+    int idMenorCusto[2];
+    int cont, J;
+    int k = 0;
     Node* aux;
-    bool* V = new bool[order];
-    int ArvNE = SubOrder - 1;
-    int cont = 0;
-    int NodeIndex;
-
-    for(int i = 0; i < order; i++)
+    for(int i = 0; i < SubOrder; i++)
     {
-        V[i] = false;
+        aux = getNode(ListIdNodes[i]);
+        custo[i] = new float[SubOrder];
+        for(int j = 0; j < SubOrder; j++)
+        {
+            if(aux->searchEdge(ListIdNodes[j]))
+            {
+                custo[ListIdNodes[i]][ListIdNodes[j]] = aux->getEdge(ListIdNodes[j])->getWeight();
+                if((aux->getEdge(ListIdNodes[j])->getWeight() < EdgeMenorCusto))
+                {
+                    EdgeMenorCusto = aux->getEdge(ListIdNodes[j])->getWeight();
+                    idMenorCusto[0] = ListIdNodes[i];
+                    idMenorCusto[1] = ListIdNodes[j];
+                }
+            }else
+                {
+                    custo[ListIdNodes[i]][ListIdNodes[j]] = std::numeric_limits<float>::infinity();
+                }
+        }
     }
 
-    AuxPrim(ListIdNodes[0],V,PQ,SubOrder,ListIdNodes);
-    while(!PQ.empty() && cont != ArvNE)
+    aux = Arv->getNode(idMenorCusto[0]);//Aponta para o nó de menor custo
+    aux->insertEdge(idMenorCusto[1],getNode(idMenorCusto[0])->getEdge(idMenorCusto[1])->getWeight());//Insere na solução a aresta de menor custo
+    for(int i = 0; i < SubOrder; i++)
     {
-        NodeIndex = PQ.front().getTargetId();
-        //cout << PQ.front().getSourceId() << "," << PQ.front().getTargetId() << endl;
-        if(V[NodeIndex] == false)
+        aux = getNode(ListIdNodes[i]);
+        if(aux->searchEdge(idMenorCusto[0]) || aux->searchEdge(idMenorCusto[1]))
         {
-            Arv->insertEdge(PQ.front().getSourceId(), PQ.front().getTargetId(), PQ.front().getWeight());
-            cont++;
-            PQ.pop();
-            
+            if(custo[ListIdNodes[i]][idMenorCusto[0]] < custo[ListIdNodes[i]][idMenorCusto[1]])
+            {
+                prox[ListIdNodes[i]] = idMenorCusto[0];
+            }else
+                {
+                    prox[ListIdNodes[i]] = idMenorCusto[1];
+                }
         }else
             {
-                PQ.pop();
+                prox[ListIdNodes[i]] = idMenorCusto[1];
             }
+    }
+    prox[idMenorCusto[1]] = -1;
+    prox[idMenorCusto[0]] = -1;
+    cont = 1;
 
-        AuxPrim(NodeIndex,V,PQ,SubOrder,ListIdNodes); 
+    while(cont < SubOrder-1)
+    {   
+        
+        for(int j = 0; j < SubOrder; j++)
+        {
+            if(prox[ListIdNodes[j]] != -1 && AuxPrim(custo[ListIdNodes[j]][prox[ListIdNodes[j]]],custo,prox))
+            {
+                aux = Arv->getNode(ListIdNodes[j]);
+                aux->insertEdge(prox[ListIdNodes[j]],getNode(ListIdNodes[j])->getEdge(prox[ListIdNodes[j]])->getWeight());
+                prox[ListIdNodes[j]] == -1;
+                J = ListIdNodes[j];
+                break;
+            }
+            
+        }
+        for(int i = 0; i < SubOrder; i++)
+        {
+            if(prox[ListIdNodes[i]] != -1 && (custo[ListIdNodes[i]][prox[ListIdNodes[i]]] > custo[ListIdNodes[i]][J]))
+            {
+                prox[ListIdNodes[i]] = J;
+            }
+        }
+        cont++;
     }
 
     //imprimindo arvore na tela
@@ -703,7 +757,8 @@ Graph* Graph::Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file)
     }
 
     //Organizando arestas em ordem crescente
-    int tempW, tempS, tempT;
+    float tempW;
+    int tempS, tempT;
     for(int i = 0; i < number_edges; i++)
     {
         for( int j = i + 1; j < number_edges; j++)

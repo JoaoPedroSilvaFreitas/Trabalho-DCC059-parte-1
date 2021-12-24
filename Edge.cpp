@@ -11,7 +11,7 @@ Edge::Edge(int target_id)
     this->weight = 0;
 }
 
-Edge::Edge(int source_id, int target_id, float weight)
+Edge::Edge(int source_id, int target_id, float weight)//Contrutor para auxiliar na fila de arestas
 {
     this->source_id = source_id;
     this->target_id = target_id;

@@ -217,53 +217,92 @@ void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
             {
                 int SubOrder;
                 int id;
-                cout << "Digite o tamanho da lista de vertices: ";
-                cin >> SubOrder;
-                while(SubOrder > grafo->getOrder() || SubOrder < 0)
+                char opt2;
+                int* listIdNodes;
+
+                cout << "Deseja aplicar Prim no grafo inteiro?"<< endl;
+                cout << "1-Sim" << endl;
+                cout << "0-Nao(Aperte qualquer tecla)" << endl;
+                cin >> opt2;
+                if(opt2 == '1')
                 {
-                    cout << "Digite o tamanho da lista de vertices: ";
-                    cin >> SubOrder;
-                }
-                int* listIdNodes = new int[SubOrder];
-                cout << "Digite os Ids para a arvore geradora minima:" << endl;
-                for(int i = 0; i < SubOrder; i++)
-                {
-                    cin >> id;
-                    while(id > grafo->getOrder()-1 || id < 0)
+                    SubOrder = grafo->getOrder();
+                    listIdNodes = new int[SubOrder];
+                    for(int i = 0; i < SubOrder; i++)
                     {
-                        cout << "Vertice invalido!" << endl;
-                        cin >> id;
+                        listIdNodes[i] = i;
                     }
-                    listIdNodes[i] = id;
-                }
-                grafo->Prim(listIdNodes,SubOrder, output_file);
+                    grafo->Prim(listIdNodes,SubOrder,output_file);
+                }else
+                    {
+                        cout << "Digite o tamanho da lista de vertices: ";
+                        cin >> SubOrder;
+                        while(SubOrder > grafo->getOrder() || SubOrder < 0)
+                        {
+                            cout << "Digite o tamanho da lista de vertices: ";
+                            cin >> SubOrder;
+                        }
+                        listIdNodes = new int[SubOrder];
+                        cout << "Digite os Ids para a arvore geradora minima:" << endl;
+                        for(int i = 0; i < SubOrder; i++)
+                        {
+                            cin >> id;
+                            while(id > grafo->getOrder()-1 || id < 0)
+                            {
+                                cout << "Vertice invalido!" << endl;
+                                cin >> id;
+                            }
+                            listIdNodes[i] = id;
+                        }
+                        grafo->Prim(listIdNodes,SubOrder, output_file);
+                    }
             }
 
             //Algoritmo de Kruskal
             if(opt == 'f' || opt == 'F')
-            {
+            {   
+                char opt2;
                 int SubOrder;
                 int id;
-                cout << "Digite o tamanho da lista de vertices: ";
-                cin >> SubOrder;
-                while(SubOrder > grafo->getOrder() || SubOrder < 0)
+                int* listIdNodes;
+                
+                cout << "Deseja aplicar Kruskal no grafo inteiro?"<< endl;
+                cout << "1-Sim" << endl;
+                cout << "0-Nao(Aperte qualquer tecla)" << endl;
+                cin >> opt2;
+                if(opt2 == '1')
                 {
-                    cout << "Digite o tamanho da lista de vertices: ";
-                    cin >> SubOrder;
-                }
-                int* listIdNodes = new int[SubOrder];
-                cout << "Digite os Ids para a arvore geradora minima:" << endl;
-                for(int i = 0; i < SubOrder; i++)
-                {
-                    cin >> id;
-                    while(id > grafo->getOrder()-1 || id < 0)
+                    SubOrder = grafo->getOrder();
+                    listIdNodes = new int[SubOrder];
+                    for(int i = 0; i < SubOrder; i++)
                     {
-                        cout << "Vertice invalido!" << endl;
-                        cin >> id;
+                        listIdNodes[i] = i;
                     }
-                    listIdNodes[i] = id;
-                }
-                grafo->Kruskal(listIdNodes,SubOrder, output_file);
+
+                    grafo->Kruskal(listIdNodes,SubOrder, output_file);
+                }else
+                    {
+                        cout << "Digite o tamanho da lista de vertices: ";
+                        cin >> SubOrder;
+                        while(SubOrder > grafo->getOrder() || SubOrder < 0)
+                        {
+                            cout << "Digite o tamanho da lista de vertices: ";
+                            cin >> SubOrder;
+                        }
+                        listIdNodes = new int[SubOrder];
+                        cout << "Digite os Ids para a arvore geradora minima:" << endl;
+                        for(int i = 0; i < SubOrder; i++)
+                        {
+                            cin >> id;
+                            while(id > grafo->getOrder()-1 || id < 0)
+                            {
+                                cout << "Vertice invalido!" << endl;
+                                cin >> id;
+                            }
+                            listIdNodes[i] = id;
+                        }
+                        grafo->Kruskal(listIdNodes,SubOrder, output_file);
+                    }
             }
 
             //Caminhamento em largura

@@ -55,7 +55,7 @@ class Graph
 
         //Funções (E) e auxiliares
         Graph* Prim(int* ListIdNodes, int SubOrder, ofstream& output_file);
-        void  AuxPrim(int id, bool* V, std::queue<Edge> &PQ, int SubOrder, int* ListIdNodes);
+        bool AuxPrim(float min, float** custo, int* prox);
 
         //Funções (F) e auxiliares
         Graph* Kruskal(int* ListIdNodes, int SubOrder, ofstream& output_file);

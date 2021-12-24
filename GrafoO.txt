@@ -1,41 +1,18 @@
-GrafoOriginal {
+ArvoreMinimaPrim {
     0->1;
-    1->2->3->4;
-    2->5->6;
-    3->5->6;
-    4->6->7;
-    5->8;
-    6->8->9->10;
-    7->9->10;
-    8->11;
-    9->11;
-    10->11;
+    1;
+    2;
+    3;
+    4;
+    5;
+    6;
+    7;
+    8;
+    9;
+    10;
     11;
 }
 ArvoreMinimaPrim {
     0->1;
     1;
-}
-ArvoreMinimaKruskal {
-    0->1;
-    1;
-}
-ArvoreMinimaPrim {
-}
-GrafoVerticeInduzidoDireto {
-    0->1;
-    1->2->3->4;
-    2->5->6;
-    3->5->6;
-    4->6->7;
-    5->8;
-    6->8->9->10;
-    7->9->10;
-    8->11;
-    9->11;
-    10->11;
-    11;
-}
-GrafoVerticeInduzidoIndireto {
-    0;
 }
