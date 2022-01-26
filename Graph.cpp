@@ -288,13 +288,14 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
             for(int i = 0; i < sub_grafo->getOrder(); i++)
             {
                 node = getNode(listIdNodes[i]);
+                sub_grafo->getNode(listIdNodes[i])->setWeight(node->getWeight()); //PARA ARRUMAR O ERRO ABAIXO USEI ISSO
                 for(int j = 0; j < sub_grafo->getOrder(); j++)
                 {
                     if(node->searchEdge(listIdNodes[j]))
                     {
                         if(sub_grafo->getNode(listIdNodes[j])->searchEdge(node->getId()) ==  false)
                         {
-                            node->setWeight(getNode(listIdNodes[i])->getWeight());
+                            //node->setWeight(getNode(listIdNodes[i])->getWeight()); ESSA PARTE ESTAVA ERRADA PQ NAO ADICIONAVA O PESO NO SUBGRAFO
                             sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],1);
                         }
                     }
@@ -308,6 +309,7 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
             for(int i = 0; i < sub_grafo->getOrder(); i++)
             {
                 node = sub_grafo->getNode(listIdNodes[i]);
+                sub_grafo->getNode(listIdNodes[i])->setWeight(node->getWeight()); //PARA ARRUMAR O ERRO ABAIXO USEI ISSO
                 for(int j = 0; j < sub_grafo->getOrder(); j++)
                 {
                     if(node->searchEdge(listIdNodes[j]))
@@ -315,7 +317,7 @@ Graph* Graph::getVertexInduced(int* listIdNodes, int OrderSubGraph)
                         if(sub_grafo->getNode(listIdNodes[j])->searchEdge(node->getId()) ==  false)
                         {
                             edge = node->getEdge(listIdNodes[j]);
-                            node->setWeight(getNode(listIdNodes[i])->getWeight());
+                            //node->setWeight(getNode(listIdNodes[i])->getWeight()); ESSA PARTE ESTAVA ERRADA PQ NAO ADICIONAVA O PESO NO SUBGRAFO
                             sub_grafo->insertEdge(listIdNodes[i],listIdNodes[j],edge->getWeight());
                         }
                     }
@@ -934,11 +936,9 @@ void Graph::TopologicalSorting(ofstream& output_file)
 //FUNÇÕES PARTE 2
 bool Graph::GulosoVazio(bool* V)
 {
-    //Node* aux;
     for(int i = 0; i < order; i++)
     {
-        //aux = getNode(i);
-        if(/*aux->getVisitado() == false*/V[i] == false)
+        if(V[i] == false)
         {
             return false;
         }
@@ -975,7 +975,6 @@ float Graph::Guloso(int k, ofstream& output_file)
     for(int i = 0; i < order; i++)
     {
         aux = getNode(i);
-        //aux->setVisitado(false);
         visitado[i] = false;
         decrescente[i] = aux->getId();
     }
@@ -1003,7 +1002,7 @@ float Graph::Guloso(int k, ofstream& output_file)
         }
 
         //função criterio
-        if(/*getNode(decrescente[I])->getVisitado() == false*/ visitado[decrescente[I]] == false)
+        if(visitado[decrescente[I]] == false)
         {
             aux = getNode(decrescente[I]);
             solucao[aux->getId()][cont] = true; //inserindo na solução
@@ -1025,8 +1024,14 @@ float Graph::Guloso(int k, ofstream& output_file)
                 
             }
 
+            for(int i = 0; i < order; i++)
+            {
+                cout << i << "(A):" << GrafoAux->getNode(i)->getWeight()<< endl;
+                cout << i << "(G):" << getNode(i)->getWeight()<< endl;
+            }
+
+
             solucao[deltaId][cont] = true;
-            //getNode(deltaId)->setVisitado(true);
             visitado[deltaId] = true;
             I++;
             cont++;

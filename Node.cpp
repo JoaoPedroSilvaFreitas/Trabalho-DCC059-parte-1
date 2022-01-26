@@ -12,7 +12,7 @@ Node::Node(int id)
     this->id = id;
     this->in_degree = 0;
     this->out_degree = 0;
-    this->weight = 0;
+    this->weight = 1;
     this->first_edge = nullptr;
     this->last_edge = nullptr;
     this->next_node = nullptr;
