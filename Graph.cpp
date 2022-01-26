@@ -598,7 +598,7 @@ float Graph::floydWarshall(int idSource, int idTarget, ofstream& output_file)
     return Dist[idSource][idTarget];
 }
 
-//Arvore Geradora Minima de Prim (E)
+//Arvore Geradora Minima de Prim (E) (incompleto)
 bool Graph::AuxPrim(float min, float** custo, int* prox)
 {
     float Min = std::numeric_limits<float>::infinity();
@@ -930,6 +930,112 @@ void Graph::TopologicalSorting(ofstream& output_file)
 
 }
 
+
+//FUNÇÕES PARTE 2
+bool Graph::GulosoVazio(bool* V)
+{
+    //Node* aux;
+    for(int i = 0; i < order; i++)
+    {
+        //aux = getNode(i);
+        if(/*aux->getVisitado() == false*/V[i] == false)
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+
+float Graph::Guloso(int k, ofstream& output_file)
+{
+    int decrescente [order];
+    int temp, cont = 0, I = 0, deltaId;
+    bool** solucao = new bool*[order];
+    bool visitado[order];
+    Node* aux;
+    Graph* GrafoAux;
+    float delta = 0, min = std::numeric_limits<float>::infinity();
+
+    //inicianto matriz solução
+    //A matrix solução consiste em N linhas (cada linha representando um vertice) e K colunas (cada coluna representando uma partição do grafo)
+    //se o vertice estiver no grupo k na solução ele sera true, caso contrario false
+    for(int i = 0; i < order; i ++)
+    {
+        solucao[i] = new bool[k];
+        for(int j = 0; j < k; j++)
+        {
+            solucao[i][j] = false;
+        }
+    }
+
+    //Organizando vertices de forma decrescente em uma fila
+    //Preenchendo vetor auxiliar
+    for(int i = 0; i < order; i++)
+    {
+        aux = getNode(i);
+        //aux->setVisitado(false);
+        visitado[i] = false;
+        decrescente[i] = aux->getId();
+    }
+
+    for(int i = 0; i < order; i ++)
+    {
+        for(int j = 0; j < order; j++)
+        {
+            if(getNode(decrescente[j])->getWeight() < getNode(decrescente[i])->getWeight())
+            {
+               temp = decrescente[i];
+               decrescente[i] = decrescente[j];
+               decrescente[j] = temp;
+            }
+        }
+    }
+
+    while(GulosoVazio(visitado) == false)
+    {
+        if(cont == k-1)
+        {
+            //esse cont organiza em quais partições será inserido por exemplo,
+            //se eu estou no cont = 0, vou inserir o nó na partição k0
+            cont == 0;
+        }
+
+        //função criterio
+        if(/*getNode(decrescente[I])->getVisitado() == false*/ visitado[decrescente[I]] == false)
+        {
+            aux = getNode(decrescente[I]);
+            solucao[aux->getId()][cont] = true; //inserindo na solução
+            GrafoAux = getVertexInducedDirect(aux->getId(),output_file);
+
+            for(int i = 0; i < order; i++)
+            {
+                if(GrafoAux->searchNode(i))
+                {
+                    delta = aux->getWeight() - GrafoAux->getNode(i)->getWeight();
+                    cout << aux->getWeight() << " - " << GrafoAux->getNode(i)->getWeight() << " = " << delta << endl;
+
+                    if(delta < min)
+                    {
+                        deltaId = GrafoAux->getNode(i)->getId();
+                        min = delta;
+                    }
+                }
+                
+            }
+
+            solucao[deltaId][cont] = true;
+            //getNode(deltaId)->setVisitado(true);
+            visitado[deltaId] = true;
+            I++;
+            cont++;
+        }
+        
+    }
+
+
+}
 
 
 //Outras

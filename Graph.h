@@ -67,6 +67,18 @@ class Graph
         void TopologicalSorting(ofstream& output_file);
         int AuxTopologicalSorting(int i, bool* V, int* ordTop, int N, ofstream& output_file);
 
+
+        //Funções (J) e auxiliares
+        float Guloso(int k, ofstream& output_file);
+        bool GulosoVazio(bool* V);
+
+        //Funções (K) e auxiliares
+        void GulosoRandomizado();
+
+        //Funções (L) e auxiliares
+        void GulosoRandomizadoReativo();
+
+
     private:
     
         int insert_aux;

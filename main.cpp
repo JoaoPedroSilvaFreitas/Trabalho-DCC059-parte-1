@@ -88,6 +88,9 @@ char MainMenu(Graph* grafo)
     cout << "F- Arvore Geradora Minima de Kruskal" << endl;
     cout << "G- Imprimir caminhamento em largura" << endl;
     cout << "H- Imprimir ordenacao topologica" << endl;
+    cout << "J- Algoritmo Guloso" << endl;
+    cout << "K- Algoritmo Guloso Randomizado" << endl;
+    cout << "L- Algoritmo Guloso Randomizado Reativo" << endl;
     cout << "----------------------------Funcoes adicionais----------------------------" << endl;
     cout << "I- Imprime lista original" << endl;
     cout << "0- Sair" << endl;
@@ -105,63 +108,53 @@ void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
             //Subgrafo vertice induzido fecho transitivo direto
             if(opt == 'a' || opt == 'A')
             {
-                if(grafo->getDirected())
+                Graph* grafoDireto;
+                int idSource;
+                do{
+                    cout << "Vertice:";
+                    cin >> idSource;
+                }while(idSource > grafo->getOrder()-1 || idSource < 0);
+                grafoDireto = grafo->getVertexInducedDirect(idSource, output_file);
+                grafoDireto->Print_Ad_list();
+
+                //Salvando grafo no arquivo de saída
+                if(output_file.is_open())
                 {
-                    Graph* grafoDireto;
-                    int idSource;
-                    do{
-                        cout << "Vertice:";
-                        cin >> idSource;
-                    }while(idSource > grafo->getOrder()-1 || idSource < 0);
-                    grafoDireto = grafo->getVertexInducedDirect(idSource, output_file);
-                    grafoDireto->Print_Ad_list();
-
-                    //Salvando grafo no arquivo de saída
-                    if(output_file.is_open())
+                    output_file << "GrafoVerticeInduzidoDireto {" << endl;
+                    grafoDireto->Print_Graph_OF(output_file);
+                    output_file << "}" << endl;
+                }
+                else
                     {
-                        output_file << "GrafoVerticeInduzidoDireto {" << endl;
-                        grafoDireto->Print_Graph_OF(output_file);
-                        output_file << "}" << endl;
-                    }
-                    else
-                        {
-                            cerr << "erro ao abrir " << endl;
-                            exit(1);
-                        }                    
-
-
-                }else
-                cout << "ERRO: Grafo nao direcionado!" << endl;
+                        cerr << "erro ao abrir " << endl;
+                        exit(1);
+                    }                    
             }
 
             //Subgrafo vertice induzido fecho transitivo indireto
             if(opt == 'b' || opt == 'B')
             {
-                if(grafo->getDirected())
-                {
-                    Graph* grafoIndireto;
-                    int idSource;
-                    do{
-                        cout << "Vertice:";
-                        cin >> idSource;
-                    }while(idSource > grafo->getOrder()-1 || idSource < 0);
-                    grafoIndireto = grafo->getVertexInducedIndirect(idSource, output_file);
-                    grafoIndireto->Print_Ad_list();
+                Graph* grafoIndireto;
+                int idSource;
+                do{
+                    cout << "Vertice:";
+                    cin >> idSource;
+                }while(idSource > grafo->getOrder()-1 || idSource < 0);
+                grafoIndireto = grafo->getVertexInducedIndirect(idSource, output_file);
+                grafoIndireto->Print_Ad_list();
 
-                    //Salvando grafo no arquivo de saída
-                    if(output_file.is_open())
+                //Salvando grafo no arquivo de saída
+                if(output_file.is_open())
+                {
+                    output_file << "GrafoVerticeInduzidoIndireto {" << endl;
+                    grafoIndireto->Print_Graph_OF(output_file);
+                    output_file << "}" << endl;
+                }
+                else
                     {
-                        output_file << "GrafoVerticeInduzidoIndireto {" << endl;
-                        grafoIndireto->Print_Graph_OF(output_file);
-                        output_file << "}" << endl;
+                        cerr << "erro ao abrir " << endl;
+                        exit(1);
                     }
-                    else
-                        {
-                            cerr << "erro ao abrir " << endl;
-                            exit(1);
-                        }
-                }else
-                cout << "ERRO: Grafo nao direcionado!" << endl;
             }
 
             //Algotirmo de Dijkstra
@@ -320,7 +313,14 @@ void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
             //Ordenação topológica
             if(opt == 'h' || opt == 'H')
             {
-                grafo->TopologicalSorting(output_file);
+                if(grafo->getDirected())
+                {
+                    grafo->TopologicalSorting(output_file);
+                }else
+                    {
+                        cout << "ERRO: Grafo nao direcionado!" << endl;
+                    }
+                
             }
 
             //Imprime Lista de adjacência original
@@ -340,6 +340,33 @@ void AuxMainMenu(Graph* grafo, ofstream& output_file, string output_file_name)
                         cerr << "erro ao abrir " << endl;
                         exit(1);
                     }
+            }
+
+            //Algoritmo guloso
+            if(opt == 'j' || opt == 'J')
+            {
+                int k;
+                cout << "Particionar o grafo em quantos grupos:";
+                cin >> k;
+                while(k > grafo->getOrder() || k < 0)
+                {
+                    cout << "ERRO: valor inserido e menor que 0 ou maior que a ordem do grafo" << endl;
+                    cout << "Particionar o grafo em quantos grupos:";
+                    cin >> k;
+                }
+                grafo->Guloso(k,output_file);
+            }
+
+            //Algoritmo guloso randomizado
+            if(opt == 'k' || opt == 'K')
+            {
+
+            }
+
+            //Algoritmo guloso randomizado reativo
+            if(opt == 'l' || opt == 'L')
+            {
+
             }
 
         }
